@@ -1,0 +1,17 @@
+{
+  "name": "@zzx58/wishing-pim",
+  "private": true,
+  "workspaces": [
+    "dbs/*",
+    "apps/*",
+    "services/*",
+    "docs/*"
+  ],
+  "scripts": {
+    "rds1:push": "bunx drizzle-kit push --config=dbs/rds_1/drizzle.config.ts",
+    "rds1:generate": "bunx drizzle-kit generate --config=dbs/rds_1/drizzle.config.ts",
+    "rds1:migrate": "bunx drizzle-kit migrate --config=dbs/rds_1/drizzle.config.ts",
+    "inn-ts:dev": "bun run --cwd services/inngest dev",
+    "wishing-pim:dev": "bun run --cwd apps/wishing-pim-main dev"
+  }
+}

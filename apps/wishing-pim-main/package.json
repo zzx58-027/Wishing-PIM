@@ -1,0 +1,46 @@
+{
+  "name": "wishing-pim-main",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "author": {
+    "name": "zzx58",
+    "email": "8742236@gmail.com",
+    "url": "https://github.com/zzx58_027"
+  },
+  "scripts": {
+    "dev": "vite",
+    "build": "vue-tsc -b && vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@pinia/colada": "^0.17.1",
+    "@vueuse/components": "^13.6.0",
+    "@vueuse/core": "^13.6.0",
+    "class-variance-authority": "^0.7.1",
+    "consola": "^3.4.2",
+    "defu": "^6.1.4",
+    "fuse.js": "^7.1.0",
+    "pinia": "^3.0.3",
+    "radash": "^12.1.1",
+    "tailwind-merge": "^3.3.1",
+    "unplugin-auto-import": "^20.0.0",
+    "unplugin-vue-markdown": "^29.1.0",
+    "vue": "^3.5.18"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue": "^6.0.1",
+    "@vue/tsconfig": "^0.7.0",
+    "naive-ui": "^2.42.0",
+    "typescript": "~5.8.3",
+    "unocss": "^66.4.2",
+    "unplugin-fonts": "^1.4.0",
+    "unplugin-icons": "^22.2.0",
+    "unplugin-turbo-console": "^2.2.0",
+    "unplugin-vue-components": "^29.0.0",
+    "unplugin-vue-router": "^0.15.0",
+    "vite": "^7.1.0",
+    "vite-plugin-vue-devtools": "^8.0.0",
+    "vue-tsc": "^3.0.5"
+  }
+}
