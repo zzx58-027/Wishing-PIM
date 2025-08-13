@@ -5,10 +5,16 @@ import VueComponents from "unplugin-vue-components/vite";
 import AutoImport from "unplugin-auto-import/vite";
 import { NaiveUiResolver } from "unplugin-vue-components/resolvers";
 import VueMarkdown from "unplugin-vue-markdown/vite";
+import UnoCSS from 'unocss/vite'
+import vueDevTools from 'vite-plugin-vue-devtools'
 
 // https://vite.dev/config/
 export default defineConfig({
   plugins: [
+    vueDevTools({
+      componentInspector: true,
+      launchEditor: 'trae'
+    }),
     // https://www.vue-plugins.org/plugins/unplugin-vue-router
     VueRouter({
       routesFolder: "src/pages",
@@ -27,6 +33,7 @@ export default defineConfig({
     vue({
       include: [/\.vue$/, /\.md$/],
     }),
+    UnoCSS(),
     VueComponents({
       resolvers: [NaiveUiResolver()],
       dts: true,
