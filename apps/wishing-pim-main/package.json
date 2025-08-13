@@ -8,6 +8,7 @@
     "email": "8742236@gmail.com",
     "url": "https://github.com/zzx58_027"
   },
+  "homepage": "https://github.com/zzx58-027/Wishing-PIM",
   "scripts": {
     "dev": "vite",
     "build": "vue-tsc -b && vite build",

@@ -1,10 +1,3 @@
----
-title: 123
-meta:
-    - name: Test Meta
-      content: Hello World
----
+# Hello
 
-# hello zzx
-
-123
+<RouterLink to="/test">Test</RouterLink>
