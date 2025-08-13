@@ -7,6 +7,21 @@ meta:
 
 # hello zzx
 
-123,456
+\# -> h1
 
-<RouterLink to="/" class="text-red">Home</RouterLink>
+123,456 -> p
+
+<RouterLink to="/" class="text-red underline-blue underline">Home</RouterLink>
+<br>
+<RouterLink to="/test1" class="text-red underline-blue underline">Test1</RouterLink>
+123
+
+<style scoped>
+p, h1 {
+  color: blue
+}
+</style>
+
+<script setup lang="ts">
+createReusableTemplate
+</script>

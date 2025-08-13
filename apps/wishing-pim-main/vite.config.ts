@@ -5,15 +5,15 @@ import VueComponents from "unplugin-vue-components/vite";
 import AutoImport from "unplugin-auto-import/vite";
 import { NaiveUiResolver } from "unplugin-vue-components/resolvers";
 import VueMarkdown from "unplugin-vue-markdown/vite";
-import UnoCSS from 'unocss/vite'
-import vueDevTools from 'vite-plugin-vue-devtools'
+import UnoCSS from "unocss/vite";
+import vueDevTools from "vite-plugin-vue-devtools";
 
 // https://vite.dev/config/
 export default defineConfig({
   plugins: [
     vueDevTools({
       componentInspector: true,
-      launchEditor: 'trae'
+      launchEditor: "trae",
     }),
     // https://www.vue-plugins.org/plugins/unplugin-vue-router
     VueRouter({
@@ -39,7 +39,7 @@ export default defineConfig({
       dts: true,
     }),
     AutoImport({
-      imports: ["vue", "vue-router", "@vueuse/core"],
+      imports: ["vue", "vue-router", "@vueuse/core", "pinia", "date-fns", "@vueuse/math"],
       resolvers: [NaiveUiResolver()],
       dts: true,
     }),
