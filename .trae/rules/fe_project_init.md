@@ -13,8 +13,27 @@
 }
 ```
 
-## 前端项目最小依赖
+## 最小前端项目依赖
 > 当我声明我需要一个 Vue3 最小项目时, 我会用到以下依赖.
+```bash
+# 项目初始化
+bun create vite {{project_name}} --template vue-ts
+# 安装项目开发依赖
+bun add -D unplugin-vue-router
+bun add -D unocss
+bun add -D unplugin-vue-components
+bun add -D unplugin-icons
+# 安装项目运行依赖
+bun add vue-router
+bun add class-variance-authority
+bun add tailwind-merge
+bun add @unhead/vue
+bun add unplugin-auto-import
+
+```
+
+## 常规前端项目依赖
+> 当我声明我需要一个 Vue3 常规项目时, 我会用到以下依赖.
 ```bash
 # 项目初始化
 bun create vite {{project_name}} --template vue-ts
@@ -28,6 +47,7 @@ bun add -D unplugin-icons
 bun add -D unplugin-turbo-console
 bun add -D unplugin-fonts
 # 安装项目运行依赖
+bun add vue-router
 bun add consola
 bun add unplugin-auto-import
 bun add class-variance-authority
@@ -36,6 +56,8 @@ bun add @vueuse/core
 bun add @vueuse/components
 bun add radash
 bun add unplugin-vue-markdown
+bun add @unhead/vue
+bun add date-fns
 bun add pinia
 bun add @pinia/colada
 bun add fuse.js
