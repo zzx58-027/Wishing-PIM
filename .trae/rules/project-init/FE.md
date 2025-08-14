@@ -30,7 +30,6 @@ bun add class-variance-authority
 bun add tailwind-merge
 bun add @unhead/vue
 bun add unplugin-auto-import
-
 ```
 
 ## 常规前端项目依赖
@@ -56,6 +55,7 @@ bun add vue-router
 bun add consola
 bun add unplugin-auto-import
 bun add class-variance-authority
+bun add zod
 bun add tailwind-merge
 bun add @vueuse/core
 bun add @vueuse/components

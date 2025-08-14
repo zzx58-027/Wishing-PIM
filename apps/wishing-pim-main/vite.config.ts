@@ -10,8 +10,13 @@ import vueDevTools from "vite-plugin-vue-devtools";
 import Layouts from "vite-plugin-vue-layouts";
 import Inspect from "vite-plugin-inspect";
 import { analyzer } from "vite-bundle-analyzer";
-
 import * as path from "path";
+import * as radash from "radash";
+
+// Radash 自动导入函数添加前缀避免冲突
+const radashFuncsWithPrefix = Object.keys(radash)
+  .filter((key) => typeof (radash as any)[key] === "function")
+  .map((fnName) => [fnName, `_${fnName}`]);
 
 // https://vite.dev/config/
 export default defineConfig({
@@ -57,6 +62,8 @@ export default defineConfig({
       dts: true,
     }),
     AutoImport({
+      dts: true,
+      dirs: [],
       imports: [
         "vue",
         "vue-router",
@@ -74,12 +81,10 @@ export default defineConfig({
           ],
         },
         {
-          from: "",
-          imports: [],
+          radash: radashFuncsWithPrefix as [string, string][],
         },
       ],
       resolvers: [],
-      dts: true,
     }),
   ],
 });
