@@ -16,6 +16,8 @@ meta:
 <RouterLink to="/test1" class="text-red underline-blue underline">Test1</RouterLink>
 123
 
+https://www.vue-plugins.org/plugins/unplugin-vue-router
+
 <style scoped>
 p, h1 {
   color: blue
@@ -23,5 +25,5 @@ p, h1 {
 </style>
 
 <script setup lang="ts">
-createReusableTemplate
+
 </script>

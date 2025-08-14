@@ -39,8 +39,28 @@ export default defineConfig({
       dts: true,
     }),
     AutoImport({
-      imports: ["vue", "vue-router", "@vueuse/core", "pinia", "date-fns", "@vueuse/math"],
-      resolvers: [NaiveUiResolver()],
+      imports: [
+        "vue",
+        "vue-router",
+        "@vueuse/core",
+        "pinia",
+        "date-fns",
+        "@vueuse/math",
+        {
+          from: "naive-ui",
+          imports: [
+            "useDialog",
+            "useMessage",
+            "useNotification",
+            "useLoadingBar",
+          ],
+        },
+        {
+          from: '',
+          imports: []
+        }
+      ],
+      resolvers: [],
       dts: true,
     }),
   ],
