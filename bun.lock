@@ -26,6 +26,7 @@
         "vue-router": "^4.5.1",
       },
       "devDependencies": {
+        "@pinia/colada-devtools": "^0.1.5",
         "@vitejs/plugin-vue": "^6.0.1",
         "@vue/tsconfig": "^0.7.0",
         "naive-ui": "^2.42.0",
@@ -458,6 +459,8 @@
     "@oxc-project/types": ["@oxc-project/types@0.75.1", "https://registry.npmmirror.com/@oxc-project/types/-/types-0.75.1.tgz", {}, "sha512-7ZJy+51qWpZRvynaQUezeYfjCtaSdiXIWFUZIlOuTSfDXpXqnSl/m1IUPLx6XrOy6s0SFv3CLE14vcZy63bz7g=="],
 
     "@pinia/colada": ["@pinia/colada@0.17.1", "https://registry.npmmirror.com/@pinia/colada/-/colada-0.17.1.tgz", { "dependencies": { "@vue/devtools-api": "^7.7.2" }, "peerDependencies": { "pinia": "^2.2.6 || ^3.0.0" } }, "sha512-we89QKKfLCCbhz/UOCJBYvZ5XdnbJYLDsO2prIO9W/0qMLSBRcehAi/Pm+q0wFIhvUbrAvblN3kUFxFNeyDxTw=="],
+
+    "@pinia/colada-devtools": ["@pinia/colada-devtools@0.1.5", "https://registry.npmmirror.com/@pinia/colada-devtools/-/colada-devtools-0.1.5.tgz", {}, "sha512-KqWS6Uu8cOO6LTwbA5TxrMpExmZdffJiBYTDkp1l87JNNQ+Kj6tuYyrC3MuYz2ZY+OpwDGWX7IHlkDEaCu+PYQ=="],
 
     "@polka/url": ["@polka/url@1.0.0-next.29", "https://registry.npmmirror.com/@polka/url/-/url-1.0.0-next.29.tgz", {}, "sha512-wwQAWhWSuHaag8c4q/KN/vCoeOJYshAIvMQwD4GpSb3OiZklFfvAgmj0VCBBImRpuF/aFgIRzllXlVX93Jevww=="],
 

@@ -46,6 +46,7 @@ bun add -D unplugin-vue-components
 bun add -D unplugin-icons
 bun add -D unplugin-turbo-console
 bun add -D unplugin-fonts
+bun add -D @pinia/colada-devtools
 # 安装项目运行依赖
 bun add vue-router
 bun add consola
