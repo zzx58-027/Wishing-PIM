@@ -19,8 +19,9 @@ meta:
 https://www.vue-plugins.org/plugins/unplugin-vue-router
 
 <style scoped>
+@import '@/assets/styles/style.css';
 p, h1 {
-  color: blue
+  color: red
 }
 </style>
 

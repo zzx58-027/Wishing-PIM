@@ -7,9 +7,18 @@ import { NaiveUiResolver } from "unplugin-vue-components/resolvers";
 import VueMarkdown from "unplugin-vue-markdown/vite";
 import UnoCSS from "unocss/vite";
 import vueDevTools from "vite-plugin-vue-devtools";
+import * as path from "path";
 
 // https://vite.dev/config/
 export default defineConfig({
+  resolve: {
+    alias: [
+      {
+        find: "@",
+        replacement: path.resolve("./src"),
+      },
+    ],
+  },
   plugins: [
     vueDevTools({
       componentInspector: true,
