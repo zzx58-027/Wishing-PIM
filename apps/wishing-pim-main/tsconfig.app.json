@@ -3,7 +3,7 @@
   "compilerOptions": {
     "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.app.tsbuildinfo",
     "moduleResolution": "bundler",
-    "types": ["unplugin-vue-router/client"],
+    "types": ["unplugin-vue-router/client", "vite-plugin-vue-layouts/client"],
     "baseUrl": ".",
     "paths": {
       "@/*": ["src/*"]
