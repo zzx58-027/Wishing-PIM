@@ -7,6 +7,10 @@ import { NaiveUiResolver } from "unplugin-vue-components/resolvers";
 import VueMarkdown from "unplugin-vue-markdown/vite";
 import UnoCSS from "unocss/vite";
 import vueDevTools from "vite-plugin-vue-devtools";
+import Layouts from "vite-plugin-vue-layouts";
+import Inspect from "vite-plugin-inspect";
+import { analyzer } from "vite-bundle-analyzer";
+
 import * as path from "path";
 
 // https://vite.dev/config/
@@ -20,6 +24,8 @@ export default defineConfig({
     ],
   },
   plugins: [
+    Inspect(),
+    analyzer(),
     vueDevTools({
       componentInspector: true,
       launchEditor: "trae",
@@ -28,6 +34,9 @@ export default defineConfig({
     VueRouter({
       routesFolder: "src/pages",
       extensions: [".vue", ".md"],
+    }),
+    Layouts({
+      // defaultLayout: 'default',
     }),
     // VueMarkdown must be placed before Vue plugin
     VueMarkdown({
@@ -65,9 +74,9 @@ export default defineConfig({
           ],
         },
         {
-          from: '',
-          imports: []
-        }
+          from: "",
+          imports: [],
+        },
       ],
       resolvers: [],
       dts: true,

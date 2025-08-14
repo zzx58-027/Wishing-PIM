@@ -1,15 +1,23 @@
 import { createApp } from "vue";
 import { createHead } from "@unhead/vue/client";
 import { PiniaColada } from "@pinia/colada";
-import pinia from "./store/pinia";
+import { createRouter, createWebHistory } from "vue-router";
+import { routes } from "vue-router/auto-routes";
 
+import pinia from "./store/pinia";
 import App from "./App.vue";
-import router from "./router";
 // import "./assets/styles/style.css";
 import "virtual:uno.css";
 
+import { setupLayouts } from 'virtual:generated-layouts'
+// import generatedRoutes from '~pages'
+
 const app = createApp(App);
 const head = createHead();
+const router = createRouter({
+  history: createWebHistory(),
+  routes: setupLayouts(routes)
+});
 
 app.use(router);
 app.use(head);

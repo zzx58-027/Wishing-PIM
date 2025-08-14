@@ -20,6 +20,7 @@
 bun create vite {{project_name}} --template vue-ts
 # 安装项目开发依赖
 bun add -D unplugin-vue-router
+bun add -D vite-plugin-vue-layouts
 bun add -D unocss
 bun add -D unplugin-vue-components
 bun add -D unplugin-icons
@@ -40,6 +41,9 @@ bun create vite {{project_name}} --template vue-ts
 # 安装项目开发依赖
 bun add -D vite-plugin-vue-devtools
 bun add -D unplugin-vue-router
+bun add -D vite-plugin-vue-layouts
+bun add -D vite-plugin-inspect
+bun add -D vite-bundle-analyzer 
 bun add -D unocss
 bun add -D naive-ui
 bun add -D unplugin-vue-components
@@ -57,6 +61,7 @@ bun add @vueuse/core
 bun add @vueuse/components
 bun add radash
 bun add unplugin-vue-markdown
+bun add markdown-it-link-attributes
 bun add @unhead/vue
 bun add date-fns
 bun add pinia

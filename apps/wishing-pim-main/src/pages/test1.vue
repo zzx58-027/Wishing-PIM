@@ -2,6 +2,7 @@
   <div>
     123
     {{ test }}
+    <router-link to="/">home</router-link>
   </div>
 </template>
 
