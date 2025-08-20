@@ -10,8 +10,8 @@ import vueDevTools from "vite-plugin-vue-devtools";
 import Layouts from "vite-plugin-vue-layouts";
 import Inspect from "vite-plugin-inspect";
 import { analyzer } from "vite-bundle-analyzer";
-import * as path from "path";
 import * as radash from "radash";
+import { resolve } from 'path'
 
 // Radash 自动导入函数添加前缀避免冲突
 const radashFuncsWithPrefix = Object.keys(radash)
@@ -24,7 +24,8 @@ export default defineConfig({
     alias: [
       {
         find: "@",
-        replacement: path.resolve("./src"),
+        replacement: resolve('./src'),
+        // replacement: "./src",
       },
     ],
   },

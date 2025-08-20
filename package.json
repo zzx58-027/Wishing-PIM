@@ -5,7 +5,8 @@
     "dbs/*",
     "apps/*",
     "services/*",
-    "docs/*"
+    "docs/*",
+    "tx_funcs"
   ],
   "scripts": {
     "rds1:push": "bunx drizzle-kit push --config=dbs/rds_1/drizzle.config.ts",
