@@ -7,28 +7,17 @@ import { inngest } from "../../inngest/client";
 
 type AppContext = Context<{ Bindings: Env }>;
 
-const FileType_Schema = z.object({
-  type: z.string(),
-  name: z.string(),
-  size: z.number(),
-  time: z.number(),
-  perm: z.number(),
-  owner: z.number(),
-  // Self defined
-  doc_type: z.string(),
-  doc_full_path: z.string(),
-});
-
-export class GetFilesList extends OpenAPIRoute {
+// 大于 3MB 左右, Insomnia PDF 会无法打开, 浏览器应该可以, 但是 worker 时间可能需要注意.
+export class GetFilesDownloadUrl extends OpenAPIRoute {
   schema = {
     tags: ["Poole-FTP"],
-    summary: "Get files list at specific path.",
+    summary: "Get file/files download url.",
     request: {
       body: {
         content: {
           "application/json": {
             schema: z.object({
-              path: z.string().min(1),
+              files: z.array(z.string()),
             }),
           },
         },
@@ -36,11 +25,12 @@ export class GetFilesList extends OpenAPIRoute {
     },
     responses: {
       "200": {
-        description: "Return files list result for a specific path.",
+        description: "Return file/files download_url.",
         content: {
           "application/json": {
             schema: z.object({
-              files: z.array(FileType_Schema),
+              download_url: z.string(),
+              file_name: z.string(),
             }),
           },
         },
@@ -70,18 +60,27 @@ export class GetFilesList extends OpenAPIRoute {
 
   async handle(c: AppContext) {
     const userInput = await this.getValidatedData<typeof this.schema>();
-    const { path } = userInput.body;
+    const { files } = userInput.body;
+
+    // 不直接提供整个目录的下载方式, 因此只需要判断单个/多个具体文件情况
+    let file_name =
+      files.length === 1
+        ? files[0].split("/").at(-1)
+        : `Poole-FTP Files Download - ${files[0]
+            .split("/")
+            .slice(0, -1)
+            .join("/")}.zip`;
 
     // 尝试请求的函数
     const makeRequest = async (token: string) => {
-      return await fetch(pooleFTP_Config.poole_ftp_api_maps.get_files_list, {
+      return await fetch(pooleFTP_Config.poole_ftp_api_maps.download_files, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
           Cookie: `token=${token}`,
         },
         body: JSON.stringify({
-          path,
+          files,
         }),
       });
     };
@@ -107,7 +106,6 @@ export class GetFilesList extends OpenAPIRoute {
       // 如果重试后仍然是401，返回错误
       if (!response.ok && response.status === 401) {
         c.status(401);
-
         return {
           message:
             "Unauthorized. If issue persist after retry, please contact the administrator.",
@@ -127,7 +125,8 @@ export class GetFilesList extends OpenAPIRoute {
     const result = await response.json();
 
     return {
-      files: result["files"],
+      download_url: result["link"],
+      file_name: file_name,
     };
   }
 }

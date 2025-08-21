@@ -7,3 +7,5 @@ _ignore_me
 _archive
 
 tx_funcs
+
+.env
