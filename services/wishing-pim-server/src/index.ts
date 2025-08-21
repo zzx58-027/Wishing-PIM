@@ -3,6 +3,7 @@ import { Hono } from "hono";
 import { cors } from "hono/cors";
 import { prettyJSON } from "hono/pretty-json";
 import { logger } from "hono/logger";
+import { contextStorage } from 'hono/context-storage'
 
 import { serve as inngestServe } from "inngest/hono";
 import { inngest } from "./inngest/client";
@@ -24,6 +25,7 @@ app.use(
   })
 );
 app.use(logger());
+app.use(contextStorage())
 
 app.on(["GET", "PUT", "POST"], "/api/inngest", (c) => {
   return inngestServe({
@@ -41,9 +43,9 @@ openapi.post(
   "/poole-ftp/get-files-download-url",
   pooleFtpEndpoints.GetFilesDownloadUrl
 );
-openapi.get(
-  "/inngest/poole-ftp/refresh-user-token",
-  inngestEndpoints.default
-);
+// openapi.get(
+//   "/inngest/poole-ftp/refresh-user-token",
+//   inngestEndpoints
+// );
 
 export default app;

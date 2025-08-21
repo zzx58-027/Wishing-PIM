@@ -10,6 +10,7 @@
     "generate-exports": "bun scripts/generate-exports.js"
   },
   "dependencies": {
+    "alova": "^3.3.4",
     "chanfana": "^2.6.3",
     "hono": "^4.6.20",
     "inngest": "^3.40.1",
