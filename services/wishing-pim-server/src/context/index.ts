@@ -1,3 +1,6 @@
+// 移除了全局的 honoCtx 导出，因为它会导致 "Context is not available" 错误
+// 现在使用基于参数传递的上下文方式
+
 export { INNGEST_EVENTS } from "../inngest/types";
 
 export const pooleFTP_Config = {
@@ -10,3 +13,4 @@ export const pooleFTP_Config = {
   },
   user_token_kv_path: "/poole-ftp/user_token",
 };
+

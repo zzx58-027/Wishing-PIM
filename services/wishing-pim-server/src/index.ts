@@ -10,7 +10,7 @@ import { inngest } from "./inngest/client";
 
 import * as inngestFuncs from "./inngest/funcs";
 import * as pooleFtpEndpoints from "./endpoints/poole-ftp/index";
-import * as inngestEndpoints from "./endpoints/inngest-fns/index";
+import { pooleFTPServiceMiddleware } from "./api";
 
 const app = new Hono<{ Bindings: Env }>();
 app.use(
@@ -25,7 +25,10 @@ app.use(
   })
 );
 app.use(logger());
-app.use(contextStorage())
+app.use(contextStorage());
+
+// 为 pooleFTP 相关路由自动设置上下文的中间件
+app.use("/poole-ftp/*", pooleFTPServiceMiddleware());
 
 app.on(["GET", "PUT", "POST"], "/api/inngest", (c) => {
   return inngestServe({
@@ -43,9 +46,5 @@ openapi.post(
   "/poole-ftp/get-files-download-url",
   pooleFtpEndpoints.GetFilesDownloadUrl
 );
-// openapi.get(
-//   "/inngest/poole-ftp/refresh-user-token",
-//   inngestEndpoints
-// );
 
 export default app;

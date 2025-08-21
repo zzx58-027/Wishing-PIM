@@ -1,5 +1,5 @@
 import { inngest } from "../../client";
-import { pooleFTP_Config, INNGEST_EVENTS } from "../../../configs";
+import { pooleFTP_Config, INNGEST_EVENTS } from "../../../context";
 
 export const inngest_getUserToken = inngest.createFunction(
   {

@@ -2,8 +2,7 @@ import { OpenAPIRoute } from "chanfana";
 import { z } from "zod";
 import { Context } from "hono";
 
-import { pooleFTP_Config, INNGEST_EVENTS } from "../../configs/index";
-import { inngest } from "../../inngest/client";
+import { getFilesList } from "../../api/methods/poole-ftp";
 
 type AppContext = Context<{ Bindings: Env }>;
 
@@ -45,26 +44,6 @@ export class GetFilesList extends OpenAPIRoute {
           },
         },
       },
-      "401": {
-        description: "Unauthorized.",
-        content: {
-          "application/json": {
-            schema: z.object({
-              message: z.string(),
-            }),
-          },
-        },
-      },
-      "500": {
-        description: "Internal server error.",
-        content: {
-          "application/json": {
-            schema: z.object({
-              message: z.string(),
-            }),
-          },
-        },
-      },
     },
   };
 
@@ -72,62 +51,10 @@ export class GetFilesList extends OpenAPIRoute {
     const userInput = await this.getValidatedData<typeof this.schema>();
     const { path } = userInput.body;
 
-    // 尝试请求的函数
-    const makeRequest = async (token: string) => {
-      return await fetch(pooleFTP_Config.poole_ftp_api_maps.get_files_list, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Cookie: `token=${token}`,
-        },
-        body: JSON.stringify({
-          path,
-        }),
-      });
-    };
-
-    let user_token = await c.env.KV.get(pooleFTP_Config.user_token_kv_path);
-    let response = await makeRequest(user_token);
-
-    // 如果第一次请求返回401，触发token刷新并重试
-    if (!response.ok && response.status === 401) {
-      // 触发token刷新
-      await inngest.send({
-        name: INNGEST_EVENTS.POOLE_FTP.REFRESH_USER_TOKEN,
-        data: {},
-      });
-
-      // 等待一段时间让token更新完成
-      await new Promise((resolve) => setTimeout(resolve, 3000));
-
-      // 获取新的token并重试
-      user_token = await c.env.KV.get(pooleFTP_Config.user_token_kv_path);
-      response = await makeRequest(user_token);
-
-      // 如果重试后仍然是401，返回错误
-      if (!response.ok && response.status === 401) {
-        c.status(401);
-
-        return {
-          message:
-            "Unauthorized. If issue persist after retry, please contact the administrator.",
-        };
-      }
-    }
-
-    // 处理其他非200状态码
-    if (!response.ok) {
-      c.status(500);
-      return {
-        message: "Request failed with status: " + response.status,
-      };
-    }
-
+    const files = await getFilesList(path);
     c.status(200);
-    const result = await response.json();
-
     return {
-      files: result["files"],
+      files,
     };
   }
 }

@@ -2,7 +2,7 @@ import { OpenAPIRoute } from "chanfana";
 import { z } from "zod";
 import { Context } from "hono";
 
-import { INNGEST_EVENTS } from "../../../configs";
+import { INNGEST_EVENTS } from "../../../context";
 import { inngest } from "../../../inngest/client";
 
 type AppContext = Context<{ Bindings: Env }>;

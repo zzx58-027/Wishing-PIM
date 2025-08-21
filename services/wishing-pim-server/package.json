@@ -7,7 +7,9 @@
     "dev": "wrangler dev",
     "start": "wrangler dev",
     "cf-typegen": "wrangler types",
-    "generate-exports": "bun scripts/generate-exports.js"
+    "generate-exports": "bun scripts/generate-exports.js",
+    "cf-kv:list": "wrangler kv key list --binding KV",
+    "cf-kv:clear": "rm -rf .wrangler/state/v3/kv"
   },
   "dependencies": {
     "alova": "^3.3.4",
@@ -19,6 +21,6 @@
   "devDependencies": {
     "@types/node": "22.13.0",
     "@types/service-worker-mock": "^2.0.4",
-    "wrangler": "^4.31.0"
+    "wrangler": "^4.32.0"
   }
 }

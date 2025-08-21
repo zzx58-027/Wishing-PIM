@@ -2,8 +2,9 @@ import { OpenAPIRoute } from "chanfana";
 import { z } from "zod";
 import { Context } from "hono";
 
-import { pooleFTP_Config, INNGEST_EVENTS } from "../../configs/index";
+import { pooleFTP_Config } from "../../context/index";
 import { inngest } from "../../inngest/client";
+import { INNGEST_EVENTS } from "../../inngest/types";
 
 type AppContext = Context<{ Bindings: Env }>;
 
