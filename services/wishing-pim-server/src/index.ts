@@ -3,14 +3,15 @@ import { Hono } from "hono";
 import { cors } from "hono/cors";
 import { prettyJSON } from "hono/pretty-json";
 import { logger } from "hono/logger";
-import { contextStorage } from 'hono/context-storage'
+import { contextStorage } from "hono/context-storage";
 
 import { serve as inngestServe } from "inngest/hono";
 import { inngest } from "./inngest/client";
 
 import * as inngestFuncs from "./inngest/funcs";
-import * as pooleFtpEndpoints from "./endpoints/poole-ftp/index";
-import { pooleFTPServiceMiddleware } from "./api";
+import { setPooleFTPSeriviceContext } from "./api";
+import { createRouteManager } from "./utils/routeManager";
+import { routeGroups, standaloneRoutes, getRouteStats } from "./routes/index";
 
 const app = new Hono<{ Bindings: Env }>();
 app.use(
@@ -27,8 +28,11 @@ app.use(
 app.use(logger());
 app.use(contextStorage());
 
-// 为 pooleFTP 相关路由自动设置上下文的中间件
-app.use("/poole-ftp/*", pooleFTPServiceMiddleware());
+// 为所有路由提供 hono 上下文的中间件
+app.use("*", async (c, next) => {
+  setPooleFTPSeriviceContext(c);
+  await next();
+});
 
 app.on(["GET", "PUT", "POST"], "/api/inngest", (c) => {
   return inngestServe({
@@ -41,10 +45,20 @@ app.on(["GET", "PUT", "POST"], "/api/inngest", (c) => {
 const openapi = fromHono(app, {
   docs_url: "/",
 });
-openapi.post("/poole-ftp/get-files-list", pooleFtpEndpoints.GetFilesList);
-openapi.post(
-  "/poole-ftp/get-files-download-url",
-  pooleFtpEndpoints.GetFilesDownloadUrl
-);
+
+// 使用路由管理器注册所有路由
+const routeManager = createRouteManager(openapi);
+
+// 注册路由组
+routeManager.registerRouteGroups(routeGroups);
+
+// 注册独立路由
+routeManager.registerRoutes(standaloneRoutes);
+
+// 打印路由信息（开发环境）
+if (process.env.NODE_ENV !== 'production') {
+  routeManager.printRoutes();
+  console.log('\n📊 Route Statistics:', getRouteStats());
+}
 
 export default app;
