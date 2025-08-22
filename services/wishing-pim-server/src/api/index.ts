@@ -4,7 +4,7 @@
 
 // 重新导出主要的工具函数和常量
 export {
-  pooleFTPServiceMiddleware,
+  setPooleFTPSeriviceContext,
   getUserToken,
   getFilesList,
   getFilesDownloadUrl,

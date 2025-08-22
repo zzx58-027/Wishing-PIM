@@ -2,21 +2,9 @@ import { OpenAPIRoute } from "chanfana";
 import { z } from "zod";
 import { Context } from "hono";
 
-import { getFilesList } from "../../api/methods/poole-ftp";
+import { getFilesList, PooleFTPFileSchema } from "../../api/methods/poole-ftp";
 
 type AppContext = Context<{ Bindings: Env }>;
-
-const FileType_Schema = z.object({
-  type: z.string(),
-  name: z.string(),
-  size: z.number(),
-  time: z.number(),
-  perm: z.number(),
-  owner: z.number(),
-  // Self defined
-  doc_type: z.string(),
-  doc_full_path: z.string(),
-});
 
 export class GetFilesList extends OpenAPIRoute {
   schema = {
@@ -39,7 +27,7 @@ export class GetFilesList extends OpenAPIRoute {
         content: {
           "application/json": {
             schema: z.object({
-              files: z.array(FileType_Schema),
+              files: z.array(PooleFTPFileSchema),
             }),
           },
         },
