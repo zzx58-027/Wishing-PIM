@@ -9,12 +9,14 @@ const userTokenKVPath = "/services/poole-ftp/user_token";
 // 全局变量存储当前上下文，用于 Alova 钩子中访问
 let honoCtx: Context<{ Bindings: Env }> | null = null;
 // 创建 pooleFTP 中间件工厂函数
-export const pooleFTPServiceMiddleware = () => {
-  return async (c: Context<{ Bindings: Env }>, next: () => Promise<void>) => {
-    honoCtx = c;
-    await next();
-  };
-};
+// export const pooleFTPServiceMiddleware = () => {
+//   return async (c: Context<{ Bindings: Env }>, next: () => Promise<void>) => {
+//     honoCtx = c;
+//     await next();
+//   };
+// };
+export const setPooleFTPSeriviceContext = (c: Context<{ Bindings: Env }>) =>
+  (honoCtx = c);
 
 // ---
 
@@ -116,6 +118,7 @@ export const getFilesDownloadUrl = (files: string[]) => {
     { files },
     {
       transform(rawData: { link: string }, headers) {
+        // 不直接提供整个目录的下载方式, 因此只需要判断单个/多个具体文件情况
         let file_name =
           files.length === 1
             ? files[0].split("/").at(-1)
