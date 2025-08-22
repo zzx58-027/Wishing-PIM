@@ -6,6 +6,8 @@
 // 方法2: 使用 export * 重新导出所有内容（推荐）
 export * from "./getFilesList";
 export * from "./getFilesDownloadUrl";
+export * from "./downloadFiles";
+export * from './getUserToken'
 
 // 方法3: 如果需要命名空间导出，可以这样做：
 // export * as GetFilesList from "./getFilesList";

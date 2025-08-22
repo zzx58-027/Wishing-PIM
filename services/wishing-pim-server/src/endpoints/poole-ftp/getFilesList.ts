@@ -29,6 +29,20 @@ export class GetFilesList extends OpenAPIRoute {
             schema: z.object({
               files: z.array(PooleFTPFileSchema),
             }),
+            example: {
+              files: [
+                {
+                  type: "d",
+                  name: "VITEL ENERGIA",
+                  size: 4,
+                  time: 1721043439,
+                  perm: 509,
+                  owner: 349071,
+                  doc_type: "/",
+                  doc_full_path: "/VITEL ENERGIA",
+                },
+              ],
+            },
           },
         },
       },

@@ -1,5 +1,5 @@
 import { RouteGroup } from '../utils/routeManager';
-import * as pooleFtpEndpoints from '../endpoints/poole-ftp/index';
+import * as pooleFtpEndpoints from './poole-ftp/index';
 
 /**
  * 路由配置 - 集中管理所有路由
@@ -17,7 +17,17 @@ export const routeGroups: RouteGroup[] = [
         path: '/get-files-download-url',
         method: 'post',
         handler: pooleFtpEndpoints.GetFilesDownloadUrl
-      }
+      },
+      {
+        path: '/download-files',
+        method: 'post',
+        handler: pooleFtpEndpoints.DownloadFiles
+      },
+      {
+        path: '/get-user-token',
+        method: 'get',
+        handler: pooleFtpEndpoints.GetUserToken
+      },
     ]
   }
 ];

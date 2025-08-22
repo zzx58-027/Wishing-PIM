@@ -16,7 +16,7 @@ export class GetFilesDownloadUrl extends OpenAPIRoute {
         content: {
           "application/json": {
             schema: z.object({
-              files: z.array(z.string().min(1)),
+              files: z.array(z.string().min(1)).nonempty(),
             }),
           },
         },
@@ -31,6 +31,11 @@ export class GetFilesDownloadUrl extends OpenAPIRoute {
               download_url: z.string(),
               file_name: z.string(),
             }),
+            example: {
+              download_url:
+                "https://poolelighting.ftpstream.com/files/download/HImQWzkbR6CiRLzot3ZJ",
+              file_name: "Endon 102369.pdf",
+            },
           },
         },
       },

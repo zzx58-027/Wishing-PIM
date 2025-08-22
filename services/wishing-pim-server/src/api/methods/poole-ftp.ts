@@ -37,7 +37,6 @@ const { onAuthRequired, onResponseRefreshToken } =
         } catch (error) {
           throw error;
         }
-        return response.json();
       },
     },
     // 通常，我们会在beforeRequest附加 token 到请求信息中。在 Token 认证拦截器中提供了assignToken回调函数用于附加 token，
@@ -71,6 +70,7 @@ export const getUserToken = () => {
     headers: {
       Authorization: `Basic ${honoCtx.env.POOLE_FTP_LOGIN_BASIC_AUTH}`,
     },
+    cacheFor: 0
   });
   method.meta = {
     getUserToken: true,
@@ -134,4 +134,14 @@ export const getFilesDownloadUrl = (files: string[]) => {
     }
   );
   return method;
+};
+
+export const downloadFiles = async (download_url: string) => {
+  // 直接使用 fetch 进行文件下载，避免 Alova 的 JSON 解析
+  const token = await honoCtx.env.KV.get(userTokenKVPath);
+  return fetch(download_url, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
 };

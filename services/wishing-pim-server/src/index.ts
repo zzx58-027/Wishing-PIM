@@ -11,7 +11,7 @@ import { inngest } from "./inngest/client";
 import * as inngestFuncs from "./inngest/funcs";
 import { setPooleFTPSeriviceContext } from "./api";
 import { createRouteManager } from "./utils/routeManager";
-import { routeGroups, standaloneRoutes, getRouteStats } from "./routes/index";
+import { routeGroups, standaloneRoutes, getRouteStats } from "./endpoints/routes";
 
 const app = new Hono<{ Bindings: Env }>();
 app.use(
