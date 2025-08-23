@@ -6,9 +6,35 @@
 	"$schema": "../../node_modules/wrangler/config-schema.json",
 	"name": "wishing-pim-server",
 	"main": "src/index.ts",
-	"compatibility_date": "2025-08-20",
+	"compatibility_date": "2025-08-21",
+	"compatibility_flags": [
+		"nodejs_compat"
+	],
 	"observability": {
 		"enabled": true
+	},
+	"kv_namespaces": [
+		{
+			"binding": "KV",
+			"id": "9e8174b80c1d4160a04fa73a4f106b4b"
+		}
+	],
+	"r2_buckets": [
+		{
+			"binding": "R2_Main",
+			"bucket_name": "wishing-pim"
+		},
+		{
+			"binding": "R2_Temp",
+			"bucket_name": "temp"
+		},
+	],
+	"vars": {
+		"POOLE_FTP_LOGIN_BASIC_AUTH": "***",
+		"INNGEST_SIGNING_KEY": "646cebb3cc1a985c550f54c6efa0d8ace4f3d3babd5c6f993e4d0489df286655",
+		"INNGEST_EVENT_KEY": "646cebb3cc1a985c550f54c6efa0d8ace4f3d3babd5c6f993e4d0489df286655",
+		"INNGEST_BASE_URL": "https://test-inngest.zzx58.tech",
+		"INNGEST_DEV": 0,
 	}
 	/**
 	 * Smart Placement
