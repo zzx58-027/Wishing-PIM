@@ -1,0 +1,8 @@
+{
+  "compilerOptions": {
+    "paths": {
+      // 确保只指向一份 vite, 这样就算哪怕子包里某些工具误装 vite，也会强制使用根目录的类型。
+      "vite": ["./node_modules/vite"]
+    }
+  }
+}

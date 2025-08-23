@@ -2,7 +2,7 @@ import { OpenAPIRoute } from "chanfana";
 import { z } from "zod";
 import { Context } from "hono";
 
-import { getUserToken } from "../../api/methods/poole-ftp";
+import { getUserToken } from "@/api/methods/poole-ftp";
 
 type AppContext = Context<{ Bindings: Env }>;
 

@@ -1,8 +1,8 @@
-import { OpenAPIRoute } from "chanfana";
+import { contentJson, OpenAPIRoute } from "chanfana";
 import { z } from "zod";
 import { Context } from "hono";
 
-import { getFilesDownloadUrl } from "../../api/index";
+import { getFilesDownloadUrl } from "@/api/index";
 
 type AppContext = Context<{ Bindings: Env }>;
 
@@ -12,15 +12,11 @@ export class GetFilesDownloadUrl extends OpenAPIRoute {
     tags: ["Poole-FTP"],
     summary: "Get file/files download url.",
     request: {
-      body: {
-        content: {
-          "application/json": {
-            schema: z.object({
-              files: z.array(z.string().min(1)).nonempty(),
-            }),
-          },
-        },
-      },
+      body: contentJson(
+        z.object({
+          files: z.array(z.string().min(1)).nonempty(),
+        })
+      ),
     },
     responses: {
       "200": {

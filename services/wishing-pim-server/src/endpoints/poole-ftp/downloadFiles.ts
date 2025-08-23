@@ -1,4 +1,4 @@
-import { OpenAPIRoute } from "chanfana";
+import { OpenAPIRoute, contentJson, StringParameterType, Str } from "chanfana";
 import { z } from "zod";
 import { Context } from "hono";
 import { stream } from "hono/streaming";
@@ -6,7 +6,7 @@ import { stream } from "hono/streaming";
 import {
   downloadFiles,
   getFilesDownloadUrl,
-} from "../../api/methods/poole-ftp";
+} from "@/api/methods/poole-ftp";
 
 type AppContext = Context<{ Bindings: Env }>;
 
@@ -18,40 +18,27 @@ export class DownloadFiles extends OpenAPIRoute {
       // headers: z.object({
       //   "Authorization": z.string()
       // }), // Specify the request.headers will cause the error.
-      body: {
-        content: {
-          "application/json": {
-            schema: z
-              .object({
-                download_url: z.string(),
-                files: z.array(z.string().min(1)),
-              })
-              .partial(),
-          },
-        },
-      },
+      body: contentJson(
+        z
+          .object({
+            download_url: z.string(),
+            files: z.array(z.string().min(1)),
+          })
+          .partial()
+      ),
     },
     responses: {
       "200": {
         description: "Successfully download the file as a stream.",
         content: {
           "application/pdf": {
-            schema: {
-              type: "string" as const,
-              format: "binary" as const,
-            },
+            schema: Str({ format: "binary" } as StringParameterType),
           },
           "application/zip": {
-            schema: {
-              type: "string" as const,
-              format: "binary" as const,
-            },
+            schema: Str({ format: "binary" } as StringParameterType),
           },
           "application/octet-stream": {
-            schema: {
-              type: "string" as const,
-              format: "binary" as const,
-            },
+            schema: Str({ format: "binary" } as StringParameterType),
           },
         },
         headers: {
@@ -90,7 +77,6 @@ export class DownloadFiles extends OpenAPIRoute {
   async handle(c: AppContext) {
     const userInput = await this.getValidatedData<typeof this.schema>();
 
-    console.log("zzx58:", userInput.body);
     let download_url: string;
     if (!userInput.body.download_url) {
       const { download_url: newDownloadUrl, file_name } =

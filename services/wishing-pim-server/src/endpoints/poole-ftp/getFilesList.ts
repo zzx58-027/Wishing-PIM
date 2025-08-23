@@ -1,8 +1,8 @@
-import { OpenAPIRoute } from "chanfana";
+import { contentJson, OpenAPIRoute } from "chanfana";
 import { z } from "zod";
 import { Context } from "hono";
 
-import { getFilesList, PooleFTPFileSchema } from "../../api/methods/poole-ftp";
+import { getFilesList, PooleFTPFileSchema } from "@/api/methods/poole-ftp";
 
 type AppContext = Context<{ Bindings: Env }>;
 
@@ -11,15 +11,11 @@ export class GetFilesList extends OpenAPIRoute {
     tags: ["Poole-FTP"],
     summary: "Get files list at specific path.",
     request: {
-      body: {
-        content: {
-          "application/json": {
-            schema: z.object({
-              path: z.string().min(1),
-            }),
-          },
-        },
-      },
+      body: contentJson(
+        z.object({
+          path: z.string().min(1),
+        })
+      ),
     },
     responses: {
       "200": {
