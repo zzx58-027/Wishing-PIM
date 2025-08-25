@@ -9,7 +9,7 @@ type OpenAPIHono = any; // 简化类型定义以避免复杂的类型推导问�
  */
 export interface RouteConfig {
   path: string;
-  method: 'get' | 'post' | 'put' | 'delete' | 'patch';
+  method: 'get' | 'post' | 'put' | 'delete' | 'patch' | 'head';
   handler: typeof OpenAPIRoute;
   middleware?: any[];
 }

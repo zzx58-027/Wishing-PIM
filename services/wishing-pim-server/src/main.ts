@@ -36,13 +36,15 @@ app.use("*", async (c, next) => {
 });
 
 // 为 inngest 服务注册路由.
-app.on(["GET", "PUT", "POST"], "/api/inngest", (c) => {
-  return inngestServe({
-    client: inngest,
-    functions: inngestFuncs.allFunctions,
-    // signingKey: c.env.INNGEST_SIGNING_KEY,
-  })(c);
-});
+// 部署出错, 可能存在配置问题, 暂时注释.
+// app.on(["GET", "PUT", "POST"], "/api/inngest", (c) => {
+//   return inngestServe({
+//     client: inngest,
+//     functions: inngestFuncs.allFunctions,
+//     signingKey: c.env.INNGEST_SIGNING_KEY,
+//     baseUrl: c.env.INNGEST_BASE_URL,
+//   })(c);
+// });
 
 const openapi = fromHono(app, {
   docs_url: "/",
@@ -80,23 +82,31 @@ const openapi = fromHono(app, {
 // https://github.com/cloudflare/chanfana/issues/278
 // 全局错误处理中间件 - 捕获所有端点抛出的异常
 app.onError(async (err, c) => {
-  console.error('Global error handler caught:', err);
+  console.error("Global error handler caught:", err);
 
   // 检查是否是 Chanfana 的 ApiException 或其子类
   if (err instanceof ApiException) {
     // 如果是 ApiException，使用其内置的响应格式
-    return c.json({ success: false, errors: err.buildResponse() }, err.status as any);
+    return c.json(
+      { success: false, errors: err.buildResponse() },
+      err.status as any
+    );
   }
-  
+
   // 处理其他类型的错误
-  console.error('Unhandled error:', err);
-  return c.json({
-    success: false,
-    errors: [{
-      code: 7000,
-      message: 'Internal Server Error'
-    }]
-  }, 500 as any);
+  console.error("Unhandled error:", err);
+  return c.json(
+    {
+      success: false,
+      errors: [
+        {
+          code: 7000,
+          message: "Internal Server Error",
+        },
+      ],
+    },
+    500 as any
+  );
 });
 
 // // 使用路由管理器注册所有路由
@@ -116,7 +126,11 @@ openapi.post(
 openapi.post("/poole-ftp/download-files", pooleFtpEndpoints.DownloadFiles);
 openapi.get("/poole-ftp/get-user-token", pooleFtpEndpoints.GetUserToken);
 // 注册 S3 路由组
-openapi.post("/s3/upload", s3Endpoints.UploadFiles);
+openapi
+  .put("/s3/r2", s3Endpoints.UploadFile)
+  .delete("/s3/r2/:key", s3Endpoints.UploadFile)
+  .get("/s3/r2/:key", s3Endpoints.UploadFile)
+  .on("head", "/s3/r2/:key", s3Endpoints.UploadFile);
 
 // 打印路由信息（开发环境）
 if (process.env.NODE_ENV !== "production") {

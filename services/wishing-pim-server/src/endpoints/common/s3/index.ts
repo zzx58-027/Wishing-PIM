@@ -1,2 +1,2 @@
 /* eslint-disable */
-export * from './upload'
+export * from './r2'

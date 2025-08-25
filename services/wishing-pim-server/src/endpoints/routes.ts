@@ -35,9 +35,24 @@ export const routeGroups: RouteGroup[] = [
     prefix: '/s3',
     routes: [
       {
-        path: '/upload',
-        method: 'post',
-        handler: s3Endpoints.UploadFiles
+        path: '/r2',
+        method: 'put',
+        handler: s3Endpoints.UploadFile
+      },
+      {
+        path: '/r2',
+        method: 'get',
+        handler: s3Endpoints.UploadFile
+      },
+      {
+        path: '/r2',
+        method: 'delete',
+        handler: s3Endpoints.UploadFile
+      },
+      {
+        path: '/r2',
+        method: 'head',
+        handler: s3Endpoints.UploadFile
       },
     ]
   },
