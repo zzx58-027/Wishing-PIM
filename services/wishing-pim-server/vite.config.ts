@@ -17,7 +17,7 @@ export default defineConfig({
   plugins: [
     cloudflare(),
     AutoExport({
-      path: ["**/api/*", "**/endpoints/*", "**/inngest/*", "**/utils/*"],
+      path: ["**/api/**/*", "**/endpoints/**/*", "**/inngest/*", "**/utils/*"],
       ignore: ["**/node_modules/*"],
       extname: "ts",
       formatter: (filename, extname) => `export * from './${filename}'`,
@@ -27,10 +27,21 @@ export default defineConfig({
       dirs: [],
       imports: [
         {
+          zod: ["z"],
+        },
+        {
           // Radash 自动导入函数添加前缀避免冲突
           radash: Object.keys(radash)
             .filter((key) => typeof (radash as any)[key] === "function")
             .map((fnName) => [fnName, `_${fnName}`]) as [string, string][],
+        },
+        {
+          chanfana: [
+            "NotFoundException",
+            "InputValidationException",
+            "ApiException",
+            "MultiException"
+          ],
         },
       ],
     }),

@@ -49,11 +49,30 @@ export class RouteManager {
     if (config.middleware && config.middleware.length > 0) {
       this.app.use(config.path, ...config.middleware);
     }
-
-    // 注册路由
-    this.app[config.method](config.path, config.handler);
-    this.registeredRoutes.set(routeKey, config);
+    // // 注册路由
+    // this.app[config.method](config.path, config.handler);
+    // 使用正确的 chanfana 方式注册路由
+    switch (config.method) {
+      case 'get':
+        this.app.get(config.path, config.handler);
+        break;
+      case 'post':
+        this.app.post(config.path, config.handler);
+        break;
+      case 'put':
+        this.app.put(config.path, config.handler);
+        break;
+      case 'delete':
+        this.app.delete(config.path, config.handler);
+        break;
+      case 'patch':
+        this.app.patch(config.path, config.handler);
+        break;
+      default:
+        throw new Error(`Unsupported HTTP method: ${config.method}`);
+    }
     
+    this.registeredRoutes.set(routeKey, config);
     console.log(`✓ Registered route: ${config.method.toUpperCase()} ${config.path}`);
   }
 

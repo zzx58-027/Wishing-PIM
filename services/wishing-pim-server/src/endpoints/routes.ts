@@ -1,5 +1,6 @@
 import { RouteGroup } from '../utils/routeManager';
 import * as pooleFtpEndpoints from './poole-ftp/index';
+import * as s3Endpoints from '@/endpoints/common/s3/index';
 
 /**
  * 路由配置 - 集中管理所有路由
@@ -29,7 +30,17 @@ export const routeGroups: RouteGroup[] = [
         handler: pooleFtpEndpoints.GetUserToken
       },
     ]
-  }
+  },
+  {
+    prefix: '/s3',
+    routes: [
+      {
+        path: '/upload',
+        method: 'post',
+        handler: s3Endpoints.UploadFiles
+      },
+    ]
+  },
 ];
 
 /**

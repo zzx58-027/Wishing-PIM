@@ -42,17 +42,23 @@ export class GetFilesList extends OpenAPIRoute {
           },
         },
       },
+      ...NotFoundException.schema(),
     },
   };
 
   async handle(c: AppContext) {
     const userInput = await this.getValidatedData<typeof this.schema>();
     const { path } = userInput.body;
-
-    const files = await getFilesList(path);
-    c.status(200);
-    return {
-      files,
-    };
+    try {
+      const files = await getFilesList(path);
+      c.status(200);
+      return {
+        files,
+      };
+    } catch (e) {
+      throw new NotFoundException(
+        "Resource not found. Please validate input parameters and target resource existence."
+      );
+    }
   }
 }
