@@ -8,7 +8,7 @@ export const INNGEST_EVENTS = {
   // PDF 相关事件
   PDF: {
     EXTRACT_ORDER_ITEMS: "pdf/extract.to_order_items",
-    CONVERT_TO_IMG: "pdf/convert.to_img", 
+    CONVERT_TO_IMG: "pdf/convert.to_img",
     EXTRACT_MAIN_BBOX: "pdf/extract.to_main_bbox",
     PARSE_TO_ZIPPED_RESULT: "pdf/parse.to_zipped_result",
   },
@@ -17,7 +17,45 @@ export const INNGEST_EVENTS = {
   POOLE_FTP: {
     // 预留给未来的 FTP 相关事件
   },
+
+  WEBHOOKS: {
+    MINERU: "webhooks/minerU",
+  },
 } as const;
+
+/**
+ * 具体事件类型别名
+ */
+export type ExtractOrderItemsEvent = InngestEvent<
+  typeof INNGEST_EVENTS.PDF.EXTRACT_ORDER_ITEMS
+>;
+export type ConvertPDF2ImgEvent = InngestEvent<
+  typeof INNGEST_EVENTS.PDF.CONVERT_TO_IMG
+>;
+export type ExtractMainFromPDFEvent = InngestEvent<
+  typeof INNGEST_EVENTS.PDF.EXTRACT_MAIN_BBOX
+>;
+export type GetParsedResultByMinerUEvent = InngestEvent<
+  typeof INNGEST_EVENTS.PDF.PARSE_TO_ZIPPED_RESULT
+>;
+export type MinerUResultUpload = InngestEvent<
+  typeof INNGEST_EVENTS.WEBHOOKS.MINERU
+>;
+
+/**
+ * 所有事件类型的联合类型
+ */
+export type AllInngestEvents =
+  | MinerUResultUpload
+  | ExtractOrderItemsEvent
+  | ConvertPDF2ImgEvent
+  | ExtractMainFromPDFEvent
+  | GetParsedResultByMinerUEvent;
+
+/**
+ * 事件模式定义
+ */
+export const fns_schemas = new EventSchemas().fromUnion<AllInngestEvents>();
 
 /**
  * 从事件常量中自动推导出所有事件名称的联合类型
@@ -38,24 +76,28 @@ export interface InngestEventData {
     filePath: string;
     userId?: string;
   };
-  
+
   [INNGEST_EVENTS.PDF.CONVERT_TO_IMG]: {
     fileId: string;
     filePath: string;
-    outputFormat?: 'png' | 'jpg';
+    outputFormat?: "png" | "jpg";
     quality?: number;
   };
-  
+
   [INNGEST_EVENTS.PDF.EXTRACT_MAIN_BBOX]: {
     fileId: string;
     filePath: string;
     pageNumber?: number;
   };
-  
+
   [INNGEST_EVENTS.PDF.PARSE_TO_ZIPPED_RESULT]: {
     fileId: string;
     filePath: string;
     outputPath?: string;
+  };
+
+  [INNGEST_EVENTS.WEBHOOKS.MINERU]: {
+    test: string;
   };
 }
 
@@ -64,30 +106,10 @@ export interface InngestEventData {
  */
 export type InngestEvent<T extends InngestEventName = InngestEventName> = {
   name: T;
-  data: T extends keyof InngestEventData ? InngestEventData[T] : Record<string, unknown>;
+  data: T extends keyof InngestEventData
+    ? InngestEventData[T]
+    : Record<string, unknown>;
 };
-
-/**
- * 具体事件类型别名
- */
-export type ExtractOrderItemsEvent = InngestEvent<typeof INNGEST_EVENTS.PDF.EXTRACT_ORDER_ITEMS>;
-export type ConvertPDF2ImgEvent = InngestEvent<typeof INNGEST_EVENTS.PDF.CONVERT_TO_IMG>;
-export type ExtractMainFromPDFEvent = InngestEvent<typeof INNGEST_EVENTS.PDF.EXTRACT_MAIN_BBOX>;
-export type GetParsedResultByMinerUEvent = InngestEvent<typeof INNGEST_EVENTS.PDF.PARSE_TO_ZIPPED_RESULT>;
-
-/**
- * 所有事件类型的联合类型
- */
-export type AllInngestEvents = 
-  | ExtractOrderItemsEvent
-  | ConvertPDF2ImgEvent
-  | ExtractMainFromPDFEvent
-  | GetParsedResultByMinerUEvent;
-
-/**
- * 事件模式定义
- */
-export const fns_schemas = new EventSchemas().fromUnion<AllInngestEvents>();
 
 /**
  * 获取所有事件名称的辅助函数
@@ -108,6 +130,8 @@ export function getAllEventNames(): InngestEventName[] {
  * 事件名称验证函数
  * 1. 运行时验证事件名称的有效性
  */
-export function isValidEventName(eventName: string): eventName is InngestEventName {
+export function isValidEventName(
+  eventName: string
+): eventName is InngestEventName {
   return getAllEventNames().includes(eventName as InngestEventName);
 }

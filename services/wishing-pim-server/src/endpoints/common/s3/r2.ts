@@ -2,7 +2,6 @@ import { OpenAPIRoute, contentJson, StringParameterType, Str } from "chanfana";
 import { randomUUID } from "crypto";
 import { Context } from "hono";
 import { stream } from "hono/streaming";
-import { success } from "zod/v4";
 
 type AppContext = Context<{ Bindings: Env }>;
 

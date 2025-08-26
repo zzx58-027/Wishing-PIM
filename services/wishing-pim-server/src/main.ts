@@ -6,6 +6,7 @@ import { logger } from "hono/logger";
 import { contextStorage } from "hono/context-storage";
 
 import { serve as inngestServe } from "inngest/hono";
+// import { getInngest } from "./inngest/client";
 import { inngest } from "./inngest/client";
 
 import * as inngestFuncs from "./inngest/funcs";
@@ -13,6 +14,7 @@ import { setPooleFTPSeriviceContext } from "./api/methods/poole-ftp";
 import { getRouteStats } from "./endpoints/routes";
 import * as pooleFtpEndpoints from "./endpoints/poole-ftp/index";
 import * as s3Endpoints from "./endpoints/common/s3/index";
+import { MinerUWebhookCallbackHandler } from "./endpoints/webhooks";
 
 const app = new Hono<{ Bindings: Env }>();
 app.use(
@@ -36,15 +38,19 @@ app.use("*", async (c, next) => {
 });
 
 // 为 inngest 服务注册路由.
-// 部署出错, 可能存在配置问题, 暂时注释.
-// app.on(["GET", "PUT", "POST"], "/api/inngest", (c) => {
-//   return inngestServe({
-//     client: inngest,
-//     functions: inngestFuncs.allFunctions,
-//     signingKey: c.env.INNGEST_SIGNING_KEY,
-//     baseUrl: c.env.INNGEST_BASE_URL,
-//   })(c);
-// });
+// Cloudflare Workers 部署失败的根本原因是 Inngest 客户端在模块级别初始化时尝试访问环境变量，但在 Cloudflare Workers 环境中，环境变量只在运行时（请求处理期间）可用，而不是在模块加载时可用。这导致了 Invalid URL string 错误。
+app.on(["GET", "PUT", "POST"], "/api/inngest", (c) => {
+  return inngestServe({
+    client: inngest,
+    functions: inngestFuncs.allFunctions,
+  })(c);
+  // const inngestClient = getInngest(c.env);
+  // return inngestServe({
+  //   client: inngestClient,
+  //   functions: [],
+  //   signingKey: c.env.INNGEST_SIGNING_KEY,
+  // })(c);
+});
 
 const openapi = fromHono(app, {
   docs_url: "/",
@@ -101,7 +107,7 @@ app.onError(async (err, c) => {
       errors: [
         {
           code: 7000,
-          message: "Internal Server Error",
+          message: `Internal Server Error: ${err} ${JSON.stringify(c.env)}`,
         },
       ],
     },
@@ -131,6 +137,8 @@ openapi
   .delete("/s3/r2/:key", s3Endpoints.UploadFile)
   .get("/s3/r2/:key", s3Endpoints.UploadFile)
   .on("head", "/s3/r2/:key", s3Endpoints.UploadFile);
+// 注册 Webhooks 路由组
+openapi.post("/webhooks/minerU", MinerUWebhookCallbackHandler);
 
 // 打印路由信息（开发环境）
 if (process.env.NODE_ENV !== "production") {

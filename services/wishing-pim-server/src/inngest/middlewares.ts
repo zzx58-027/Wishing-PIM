@@ -13,11 +13,18 @@ export const honoBindingsMiddleware = new InngestMiddleware({
       onFunctionRun({ ctx, fn, steps, reqArgs }) {
         return {
           transformInput({ ctx, fn, steps }) {
+            // reqArgs is the array of arguments passed to the Worker's fetch event handler
+            // ex. fetch(request, env, ctx)
+            // We cast the argument to the global Env var that Wrangler generates:
+
             // const [honoCtx] = reqArgs as [Context<{ Bindings: Bindings }>];
-            const [honoCtx] = reqArgs as [Context<{ Bindings: Env }>];
+            // const [honoCtx] = reqArgs as [Context<{ Bindings: Env }>];
+            const env = reqArgs[1] as Env;
             return {
               ctx: {
-                env: honoCtx.env,
+                // Return the env object to the function handler's input args
+                // env: honoCtx.env,
+                env,
               },
             };
           },

@@ -1,2 +1,5 @@
-// 导出所有子模块的函数
-export const allFunctions = [];
+import * as webhookHandlers from './webhookHandlers'
+
+export const allFunctions = [
+  ...Object.values(webhookHandlers)
+]

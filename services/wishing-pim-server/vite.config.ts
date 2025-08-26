@@ -6,6 +6,9 @@ import * as radash from "radash";
 import { resolve } from "path";
 
 export default defineConfig({
+  server: {
+    host: true,
+  },
   resolve: {
     alias: [
       {
@@ -17,7 +20,12 @@ export default defineConfig({
   plugins: [
     cloudflare(),
     AutoExport({
-      path: ["**/api/**/*", "**/endpoints/**/*", "**/inngest/*", "**/utils/*"],
+      path: [
+        "**/api/**/*",
+        "**/endpoints/**/*",
+        "**/inngest/funcs/**/*",
+        "**/utils/*",
+      ],
       ignore: ["**/node_modules/*"],
       extname: "ts",
       formatter: (filename, extname) => `export * from './${filename}'`,
@@ -40,7 +48,7 @@ export default defineConfig({
             "NotFoundException",
             "InputValidationException",
             "ApiException",
-            "MultiException"
+            "MultiException",
           ],
         },
       ],
