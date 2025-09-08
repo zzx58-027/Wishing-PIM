@@ -1,4 +1,4 @@
-import { RouteGroup } from '../utils/routeManager';
+import { RouteGroup } from '../archive/routeManager';
 import * as pooleFtpEndpoints from './poole-ftp/index';
 import * as s3Endpoints from '@/endpoints/common/s3/index';
 

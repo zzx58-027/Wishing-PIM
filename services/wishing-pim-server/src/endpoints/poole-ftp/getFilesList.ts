@@ -6,11 +6,16 @@ import { getFilesList, PooleFTPFileSchema } from "@/api/methods/poole-ftp";
 
 type AppContext = Context<{ Bindings: Env }>;
 
+const HeaderSchema = z.object({
+  "X-Commit-Dev-Auto-Auth": z.string(),
+});
+
 export class GetFilesList extends OpenAPIRoute {
   schema = {
     tags: ["Poole-FTP"],
     summary: "Get files list at specific path.",
     request: {
+      // headers: HeaderSchema,
       body: contentJson(
         z.object({
           path: z.string().min(1),

@@ -1,9 +1,4 @@
-import {
-  OpenAPIRoute,
-  contentJson,
-  StringParameterType,
-  Str,
-} from "chanfana";
+import { OpenAPIRoute, contentJson, StringParameterType, Str } from "chanfana";
 import { z } from "zod";
 import { Context } from "hono";
 import { stream } from "hono/streaming";
@@ -29,10 +24,14 @@ export class DownloadFiles extends OpenAPIRoute {
           .superRefine((data, ctx) => {
             // // 空字符串在 JS 中被视为 falsy 值! 空字符串 trim 后仍是空字符串, 仍然为 falsy!!
             // // zod 的错误检测会累加, 不会截断, 此部分需要再次处理 str === '' 的情况.
-            const hasDownloadUrl = data.download_url !== undefined && data.download_url !== null;
+            const hasDownloadUrl =
+              data.download_url !== undefined && data.download_url !== null;
 
             // 检查是否同时提供了两个字段或都没有提供
-            if ((hasDownloadUrl && data.files) || (!hasDownloadUrl && !data.files)) {
+            if (
+              (hasDownloadUrl && data.files) ||
+              (!hasDownloadUrl && !data.files)
+            ) {
               ctx.addIssue({
                 code: z.ZodIssueCode.custom,
                 message: "Either 'files' or 'download_url' is required.",

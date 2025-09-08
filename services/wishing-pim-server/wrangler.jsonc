@@ -25,6 +25,10 @@
     {
       "binding": "R2_Temp",
       "bucket_name": "temp"
+    },
+    {
+      "binding": "Label_Studio",
+      "bucket_name": "label-studio"
     }
   ],
   "vars": {

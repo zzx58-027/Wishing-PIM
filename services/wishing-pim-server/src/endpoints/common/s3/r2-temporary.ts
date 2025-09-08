@@ -8,7 +8,7 @@ type AppContext = Context<{ Bindings: Env }>;
 export class UploadFile extends OpenAPIRoute {
   schema = {
     tags: ["S3"],
-    summary: "Upload files to object storage",
+    summary: "Files temporary object storage operations. Save duration: 7 days.",
     request: {
       // 在 chanfana 的 OpenAPIRoute 中， 不能在 request 对象中直接定义 headers 和 query 。这是框架本身的限制。
       // 对于 query 参数 ：在 chanfana 中，你需要在 handle 方法中直接从 c.req.query() 获取：
@@ -22,6 +22,7 @@ export class UploadFile extends OpenAPIRoute {
             //   file: Str({ format: "binary" } as StringParameterType),
             // }),
             schema: z.object({
+              // bucketName: z.string(),
               files: z
                 .array(Str({ format: "binary" } as StringParameterType))
                 .nonempty(),
@@ -72,6 +73,15 @@ export class UploadFile extends OpenAPIRoute {
         //   "Content-Disposition": z.string(),
         // }),
       },
+      400: {
+        description: "Target Invalid",
+        ...contentJson(
+          z.object({
+            success: z.boolean(),
+            message: z.string(),
+          })
+        ),
+      },
       405: {
         description: "Method Not Allowed",
         ...contentJson(
@@ -83,6 +93,21 @@ export class UploadFile extends OpenAPIRoute {
       },
     },
   };
+
+  private getTargetBucket(c: AppContext, bucketName: string) {
+    // 创建存储桶映射
+    const bucketMap: Record<string, any> = {
+      "wishing-pim": c.env.R2_Main,
+      temp: c.env.R2_Temp,
+      "label-studio": c.env.Label_Studio,
+    };
+    // 获取目标存储桶
+    const targetBucket = bucketMap[bucketName];
+    if (!targetBucket) {
+      throw new InputValidationException(`Invalid bucket name: ${bucketName}`);
+    }
+    return targetBucket as R2Bucket
+  }
 
   private async returnAsJsonFile({
     c,
@@ -138,6 +163,10 @@ export class UploadFile extends OpenAPIRoute {
         // const files = body["files"] as (string | File)[];
         const formData = await c.req.formData();
         const files = formData.getAll("files") as File[];
+
+        const bucketName = formData.get("bucketName") as string;
+        const bucket = this.getTargetBucket(c, bucketName)
+
         // formData.get() 方法返回的是 string | File | null 类型，不能直接使用 as boolean 进行类型断言
         // 在 FormData 中，布尔值通常以字符串形式传输（"true" 或 "false"），需要通过字符串比较来正确转换为布尔值
         // const asJsonFile = formData.get("asJsonFile") === "true";
@@ -151,14 +180,15 @@ export class UploadFile extends OpenAPIRoute {
             );
           }
 
-          await c.env.R2_Temp.put([optKey, file.name].join("/"), file, {
-            httpMetadata: {
-              contentType: file.type,
-              contentDisposition: `attachment; filename="${file.name}"`,
-              // Content-Length 是服务器自动计算的响应头，不是客户端设置的请求头; 上传对象时，R2 会自动从请求体中计算并存储对象大小，无需手动设置
-              // contentLength: file.size,
-            },
-          });
+          // await c.env.R2_Temp.put([optKey, file.name].join("/"), file, {
+          // await bucket.put([optKey, file.name].join("/"), file, {
+          //   httpMetadata: {
+          //     contentType: file.type,
+          //     contentDisposition: `attachment; filename="${file.name}"`,
+          //     // Content-Length 是服务器自动计算的响应头，不是客户端设置的请求头; 上传对象时，R2 会自动从请求体中计算并存储对象大小，无需手动设置
+          //     // contentLength: file.size,
+          //   },
+          // });
 
           // 根据环境生成不同的URL
           // 通过检查CF_ACCOUNT_ID是否为占位符来判断是否为本地开发环境
@@ -167,7 +197,7 @@ export class UploadFile extends OpenAPIRoute {
           //   const fileUrl = isLocalDev
           //     ? `http://localhost:8787/api/s3/r2/${optKey}/${file.name}` // 本地开发环境URL
           //     : `https://${c.env.CF_ACCOUNT_ID}.r2.cloudflarestorage.com/${c.env.R2_TEMP_BUCKET}/${optKey}/${file.name}`; // 生产环境URL
-          const fileUrl = `https://${c.env.CLOUDFLARE_ACCOUNT_ID}.r2.cloudflarestorage.com/${c.env.R2_TEMP_BUCKET}/${optKey}/${file.name}`;
+          const fileUrl = `${c.env.R2_TEMP_CDN_BASE_URL}/${optKey}/${file.name}`;
 
           results.push({
             fileName: file.name,

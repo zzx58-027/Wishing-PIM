@@ -11,10 +11,11 @@ import { inngest } from "./inngest/client";
 
 import * as inngestFuncs from "./inngest/funcs";
 import { setPooleFTPSeriviceContext } from "./api/methods/poole-ftp";
-import { getRouteStats } from "./endpoints/routes";
+// import { getRouteStats } from "./endpoints/routes";
 import * as pooleFtpEndpoints from "./endpoints/poole-ftp/index";
 import * as s3Endpoints from "./endpoints/common/s3/index";
-import { MinerUWebhookCallbackHandler } from "./endpoints/webhooks";
+import { ExtractProductSpecData } from "./endpoints/ai";
+// import { MinerUWebhookCallbackHandler } from "./endpoints/webhooks";
 
 const app = new Hono<{ Bindings: Env }>();
 app.use(
@@ -37,19 +38,36 @@ app.use("*", async (c, next) => {
   await next();
 });
 
-// 为 inngest 服务注册路由.
-// Cloudflare Workers 部署失败的根本原因是 Inngest 客户端在模块级别初始化时尝试访问环境变量，但在 Cloudflare Workers 环境中，环境变量只在运行时（请求处理期间）可用，而不是在模块加载时可用。这导致了 Invalid URL string 错误。
-app.on(["GET", "PUT", "POST"], "/api/inngest", (c) => {
-  return inngestServe({
-    client: inngest,
-    functions: inngestFuncs.allFunctions,
-  })(c);
-  // const inngestClient = getInngest(c.env);
-  // return inngestServe({
-  //   client: inngestClient,
-  //   functions: [],
-  //   signingKey: c.env.INNGEST_SIGNING_KEY,
-  // })(c);
+// Chanfana 计划于 3.0 版本默认开启全局错误处理来处理端点抛出错误, 目前文档有误, 需要手动实现全局错误处理逻辑.
+// https://github.com/cloudflare/chanfana/issues/278
+// 全局错误处理中间件 - 捕获所有端点抛出的异常
+app.onError(async (err, c) => {
+  console.error("Global error handler caught:", err);
+
+  // 检查是否是 Chanfana 的 ApiException 或其子类
+  if (err instanceof ApiException) {
+    // 如果是 ApiException，使用其内置的响应格式
+    return c.json(
+      { success: false, errors: err.buildResponse() },
+      err.status as any
+    );
+  }
+
+  // 处理其他类型的错误
+  console.error("Unhandled error:", err);
+  return c.json(
+    {
+      success: false,
+      errors: [
+        {
+          code: 7000,
+          // message: `Internal Server Error: ${err} ${JSON.stringify(c.env)}`,
+          message: `Internal Server Error: ${err}`,
+        },
+      ],
+    },
+    500 as any
+  );
 });
 
 const openapi = fromHono(app, {
@@ -80,39 +98,17 @@ const openapi = fromHono(app, {
     ],
     tags: [
       { name: "Poole-FTP", description: "Operations related to Poole-FTP" },
+      {
+        name: "S3",
+        description:
+          "S3 Related Endpoints",
+      },
+      {
+        name: "Webhooks",
+        description: "External services webhook callback handlers.",
+      },
     ],
   },
-});
-
-// Chanfana 计划于 3.0 版本默认开启全局错误处理来处理端点抛出错误, 目前文档有误, 需要手动实现全局错误处理逻辑.
-// https://github.com/cloudflare/chanfana/issues/278
-// 全局错误处理中间件 - 捕获所有端点抛出的异常
-app.onError(async (err, c) => {
-  console.error("Global error handler caught:", err);
-
-  // 检查是否是 Chanfana 的 ApiException 或其子类
-  if (err instanceof ApiException) {
-    // 如果是 ApiException，使用其内置的响应格式
-    return c.json(
-      { success: false, errors: err.buildResponse() },
-      err.status as any
-    );
-  }
-
-  // 处理其他类型的错误
-  console.error("Unhandled error:", err);
-  return c.json(
-    {
-      success: false,
-      errors: [
-        {
-          code: 7000,
-          message: `Internal Server Error: ${err} ${JSON.stringify(c.env)}`,
-        },
-      ],
-    },
-    500 as any
-  );
 });
 
 // // 使用路由管理器注册所有路由
@@ -122,30 +118,43 @@ app.onError(async (err, c) => {
 // // 注册独立路由
 // routeManager.registerRoutes(standaloneRoutes);
 
+// 为 inngest 服务注册路由.
+// Cloudflare Workers 部署失败的根本原因是 Inngest 客户端在模块级别初始化时尝试访问环境变量，但在 Cloudflare Workers 环境中，环境变量只在运行时（请求处理期间）可用，而不是在模块加载时可用。这导致了 Invalid URL string 错误。
+app.on(["GET", "PUT", "POST"], "/api/inngest", (c) => {
+  return inngestServe({
+    client: inngest,
+    functions: inngestFuncs.allFunctions,
+  })(c);
+});
+
 // 直接使用 chanfana 的方式注册路由
 // 注册 Poole-FTP 路由组
-openapi.post("/poole-ftp/get-files-list", pooleFtpEndpoints.GetFilesList);
-openapi.post(
-  "/poole-ftp/get-files-download-url",
-  pooleFtpEndpoints.GetFilesDownloadUrl
-);
-openapi.post("/poole-ftp/download-files", pooleFtpEndpoints.DownloadFiles);
-openapi.get("/poole-ftp/get-user-token", pooleFtpEndpoints.GetUserToken);
-// 注册 S3 路由组
 openapi
-  .put("/s3/r2", s3Endpoints.UploadFile)
-  .delete("/s3/r2/:key", s3Endpoints.UploadFile)
-  .get("/s3/r2/:key", s3Endpoints.UploadFile)
-  .on("head", "/s3/r2/:key", s3Endpoints.UploadFile);
-// 注册 Webhooks 路由组
-openapi.post("/webhooks/minerU", MinerUWebhookCallbackHandler);
+  .post("/poole-ftp/get-files-list", pooleFtpEndpoints.GetFilesList)
+  .post(
+    "/poole-ftp/get-files-download-url",
+    pooleFtpEndpoints.GetFilesDownloadUrl
+  )
+  .post("/poole-ftp/download-files", pooleFtpEndpoints.DownloadFiles)
+  .get("/poole-ftp/get-user-token", pooleFtpEndpoints.GetUserToken);
 
-// 打印路由信息（开发环境）
-if (process.env.NODE_ENV !== "production") {
-  // routeManager.printRoutes();
-  // console.log("\n📊 Route Statistics:", getRouteStats());
-  console.log("✅ Routes registered using chanfana OpenAPI methods");
-  console.log("📊 Route Statistics:", getRouteStats());
-}
+// 注册 S3 R2_Temp 路由组
+openapi
+  .put("/s3/r2_temp/upload", s3Endpoints.UploadFile)
+  .delete("/s3/r2_temp/delete/:key", s3Endpoints.UploadFile)
+  .get("/s3/r2_temp/get/:key", s3Endpoints.UploadFile)
+  .on("head", "/s3/r2_temp/get-info/:key", s3Endpoints.UploadFile);
+
+// 注册 Webhooks 路由组
+// openapi.post("/webhooks/minerU", MinerUWebhookCallbackHandler);
+openapi.post("/ai/test", ExtractProductSpecData);
+
+// // 打印路由信息（开发环境）
+// if (process.env.NODE_ENV !== "production") {
+//   // routeManager.printRoutes();
+//   // console.log("\n📊 Route Statistics:", getRouteStats());
+//   console.log("✅ Routes registered using chanfana OpenAPI methods");
+//   console.log("📊 Route Statistics:", getRouteStats());
+// }
 
 export default app;
