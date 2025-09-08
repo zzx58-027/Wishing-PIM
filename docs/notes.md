@@ -1,0 +1,10 @@
+- openai 库弃用原因:
+    - openai 无法关闭深度思考, 或没有显示关系的选项, 和有深度思考能力的大模型不兼容
+    - 另外 openai helper zodResponseFormat 有问题, 或不太好用, 因此不使用
+    - 另外, 在 openai 下(其他没测), volc-bot 似乎不支持模型具备的强制 结构化输出 能力
+    - 结论: 不使用 openai npm 包, 不使用 openai helper zodResponseFormat.
+- 弃用 volc 网页解析(PDF 等文件解析)插件原因:
+  - bot 似乎不支持强制结构化输出的能力.
+  - 有更专业, 生产级别的 llamaCloud 服务, 有扩展能力, 适合生产使用与文件归档. 并且价格可以接受.
+- zod 可以看下如何应用于 schema. zod 的 describe 和 description 区别?
+- Poole-FTP 要将查到目标才能进行下一步骤的查询的现状拆解, 要支持直接内容查询.
