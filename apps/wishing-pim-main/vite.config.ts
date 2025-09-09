@@ -3,7 +3,10 @@ import vue from "@vitejs/plugin-vue";
 import VueRouter from "unplugin-vue-router/vite";
 import VueComponents from "unplugin-vue-components/vite";
 import AutoImport from "unplugin-auto-import/vite";
-import { NaiveUiResolver } from "unplugin-vue-components/resolvers";
+import {
+  NaiveUiResolver,
+  VueUseComponentsResolver,
+} from "unplugin-vue-components/resolvers";
 import VueMarkdown from "unplugin-vue-markdown/vite";
 import UnoCSS from "unocss/vite";
 import vueDevTools from "vite-plugin-vue-devtools";
@@ -11,7 +14,7 @@ import Layouts from "vite-plugin-vue-layouts";
 import Inspect from "vite-plugin-inspect";
 import { analyzer } from "vite-bundle-analyzer";
 import * as radash from "radash";
-import { resolve } from 'path'
+import { resolve } from "path";
 
 // Radash 自动导入函数添加前缀避免冲突
 const radashFuncsWithPrefix = Object.keys(radash)
@@ -24,7 +27,7 @@ export default defineConfig({
     alias: [
       {
         find: "@",
-        replacement: resolve('./src'),
+        replacement: resolve("./src"),
         // replacement: "./src",
       },
     ],
@@ -59,12 +62,14 @@ export default defineConfig({
     }),
     UnoCSS(),
     VueComponents({
-      resolvers: [NaiveUiResolver()],
+      resolvers: [NaiveUiResolver(), VueUseComponentsResolver()],
       dts: true,
     }),
     AutoImport({
       dts: true,
-      dirs: [],
+      dirs: ["./src/utils"],
+      // 让 AutoImport 支持 Vue 模板
+      vueTemplate: true,
       imports: [
         "vue",
         "vue-router",

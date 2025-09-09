@@ -13,9 +13,9 @@ const radashFunctions = Object.keys(radash).filter(
   key => typeof (radash as any)[key] === 'function'
 )
 </script>
-<style lang="css" scoped>
 
-    h1 {
-        font-size: 2rem
-    }
+<style lang="css" scoped>
+  h1 {
+      font-size: 2rem
+  }
 </style>
