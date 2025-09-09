@@ -1,5 +1,5 @@
 import { Inngest } from "inngest";
-import { fns_schemas } from "./types/index";
+import { fns_schemas } from "../archive/types";
 import { honoBindingsMiddleware } from "./middlewares";
 
 export const inngest = new Inngest({
