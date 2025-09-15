@@ -32,7 +32,7 @@ export default defineConfig({
     }),
     AutoImport({
       dts: true,
-      dirs: [],
+      dirs: ["src/utils"],
       imports: [
         {
           zod: ["z"],
@@ -50,6 +50,9 @@ export default defineConfig({
             "ApiException",
             "MultiException",
           ],
+        },
+        {
+          ufo: ["withQuery", "joinURL"],
         },
       ],
     }),

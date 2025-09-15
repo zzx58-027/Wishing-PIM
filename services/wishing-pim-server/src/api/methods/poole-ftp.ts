@@ -18,6 +18,10 @@ let honoCtx: Context<{ Bindings: Env }> | null = null;
 export const setPooleFTPSeriviceContext = (c: Context<{ Bindings: Env }>) =>
   (honoCtx = c);
 
+// 为什么不行?
+// import { getHonoCtx } from "./honoCtx";
+// const honoCtx = getHonoCtx();
+
 // ---
 
 // 创建认证配置，使用延迟初始化避免循环依赖
@@ -70,7 +74,7 @@ export const getUserToken = () => {
     headers: {
       Authorization: `Basic ${honoCtx.env.POOLE_FTP_LOGIN_BASIC_AUTH}`,
     },
-    cacheFor: 0
+    cacheFor: 0,
   });
   method.meta = {
     getUserToken: true,
