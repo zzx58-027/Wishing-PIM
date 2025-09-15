@@ -1,0 +1,5 @@
+- 查看指定npm包版本:
+  - npm view wrangler versions --json | tail -20
+- 有指定包版本但安装提示不存在:
+  - 确认 registry 一致. 如果你本地的 .npmrc 或 bun 配置（bunfig.toml）里换了镜像（比如淘宝镜像），有可能镜像同步不及时，导致 4.37.0 还没同步下来。你可以强制指定官方源：
+    - bun install --registry https://registry.npmjs.org/
