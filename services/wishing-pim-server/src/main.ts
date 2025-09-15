@@ -15,6 +15,12 @@ import { setPooleFTPSeriviceContext } from "./api/methods/poole-ftp";
 import * as pooleFtpEndpoints from "./endpoints/poole-ftp/index";
 import * as s3Endpoints from "./endpoints/common/s3/index";
 import { ExtractProductSpecData } from "./endpoints/ai";
+import * as TestEndpoints from "./endpoints/test";
+import { Counter } from "./cf-do-classes/task";
+
+// 导出Durable Object类，使其对Cloudflare可用
+export { Counter };
+// import { setHonoCtx } from "./api/methods";
 // import { MinerUWebhookCallbackHandler } from "./endpoints/webhooks";
 
 const app = new Hono<{ Bindings: Env }>();
@@ -35,6 +41,7 @@ app.use(contextStorage());
 // 为所有路由提供 hono 上下文的中间件
 app.use("*", async (c, next) => {
   setPooleFTPSeriviceContext(c);
+  // setHonoCtx(c);
   await next();
 });
 
@@ -88,7 +95,7 @@ const openapi = fromHono(app, {
     },
     servers: [
       {
-        url: "http://localhost:5173",
+        url: "http://localhost:5174",
         description: "Development server",
       },
       {
@@ -100,12 +107,15 @@ const openapi = fromHono(app, {
       { name: "Poole-FTP", description: "Operations related to Poole-FTP" },
       {
         name: "S3",
-        description:
-          "S3 Related Endpoints",
+        description: "S3 Related Endpoints",
       },
       {
         name: "Webhooks",
         description: "External services webhook callback handlers.",
+      },
+      {
+        name: "Test",
+        description: "Test",
       },
     ],
   },
@@ -144,10 +154,14 @@ openapi
   .delete("/s3/r2_temp/delete/:key", s3Endpoints.UploadFile)
   .get("/s3/r2_temp/get/:key", s3Endpoints.UploadFile)
   .on("head", "/s3/r2_temp/get-info/:key", s3Endpoints.UploadFile);
+openapi.post("/s3/get-presigned-url", s3Endpoints.GetPresignUrl);
 
 // 注册 Webhooks 路由组
 // openapi.post("/webhooks/minerU", MinerUWebhookCallbackHandler);
 openapi.post("/ai/test", ExtractProductSpecData);
+
+// 注册 Durable Object 测试端点
+openapi.post("/test/counter", TestEndpoints.Counter);
 
 // // 打印路由信息（开发环境）
 // if (process.env.NODE_ENV !== "production") {
