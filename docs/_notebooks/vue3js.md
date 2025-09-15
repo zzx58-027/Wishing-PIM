@@ -1,0 +1,2 @@
+- 要避免 tempDropZoneWidth 跟随 dropZoneElBoundingObj 变化而变化，需要取消它们之间的响应式关联。问题在于当前代码中 tempDropZoneWidth.value = dropZoneElBoundingObj.width.value 会建立响应式连接，导致 dropZoneElBoundingObj 变化时 tempDropZoneWidth 也会跟着变化。
+  - 解决方案是使用 Vue 的 toRaw() 或者直接获取原始值而不是引用。

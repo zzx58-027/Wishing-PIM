@@ -114,8 +114,12 @@ declare global {
   const addSeconds: typeof import('date-fns')['addSeconds']
   const addWeeks: typeof import('date-fns')['addWeeks']
   const addYears: typeof import('date-fns')['addYears']
+  const animate: typeof import('animejs')['animate']
+  const animeScope: typeof import('animejs')['createScope']
+  const animeUtils: typeof import('animejs')['utils']
   const areIntervalsOverlapping: typeof import('date-fns')['areIntervalsOverlapping']
   const asyncComputed: typeof import('@vueuse/core')['asyncComputed']
+  const autoAnimate: typeof import('@formkit/auto-animate')['autoAnimate']
   const autoResetRef: typeof import('@vueuse/core')['autoResetRef']
   const clamp: typeof import('date-fns')['clamp']
   const closestIndexTo: typeof import('date-fns')['closestIndexTo']
@@ -202,7 +206,7 @@ declare global {
   const formatDistanceToNow: typeof import('date-fns')['formatDistanceToNow']
   const formatDistanceToNowStrict: typeof import('date-fns')['formatDistanceToNowStrict']
   const formatDuration: typeof import('date-fns')['formatDuration']
-  const formatFileSize: typeof import('./src/utils/index')['formatFileSize']
+  const formatFileSize: typeof import('./src/utils/file')['formatFileSize']
   const formatISO: typeof import('date-fns')['formatISO']
   const formatISO9075: typeof import('date-fns')['formatISO9075']
   const formatISODuration: typeof import('date-fns')['formatISODuration']
@@ -378,8 +382,8 @@ declare global {
   const reactiveComputed: typeof import('@vueuse/core')['reactiveComputed']
   const reactiveOmit: typeof import('@vueuse/core')['reactiveOmit']
   const reactivePick: typeof import('@vueuse/core')['reactivePick']
-  const readDirectoryEntry: typeof import('./src/utils/index')['readDirectoryEntry']
-  const readFileEntry: typeof import('./src/utils/index')['readFileEntry']
+  const readDirectoryEntry: typeof import('./src/utils/file')['readDirectoryEntry']
+  const readFileEntry: typeof import('./src/utils/file')['readFileEntry']
   const readonly: typeof import('vue')['readonly']
   const ref: typeof import('vue')['ref']
   const refAutoReset: typeof import('@vueuse/core')['refAutoReset']
@@ -648,6 +652,8 @@ declare global {
   const useWindowFocus: typeof import('@vueuse/core')['useWindowFocus']
   const useWindowScroll: typeof import('@vueuse/core')['useWindowScroll']
   const useWindowSize: typeof import('@vueuse/core')['useWindowSize']
+  const utils: typeof import('animejs')['utils']
+  const waapi: typeof import('animejs')['waapi']
   const watch: typeof import('vue')['watch']
   const watchArray: typeof import('@vueuse/core')['watchArray']
   const watchAtMost: typeof import('@vueuse/core')['watchAtMost']
@@ -674,8 +680,8 @@ declare global {
   export type { Component, Slot, Slots, ComponentPublicInstance, ComputedRef, DirectiveBinding, ExtractDefaultPropTypes, ExtractPropTypes, ExtractPublicPropTypes, InjectionKey, PropType, Ref, ShallowRef, MaybeRef, MaybeRefOrGetter, VNode, WritableComputedRef } from 'vue'
   import('vue')
   // @ts-ignore
-  export type { FileWithPath } from './src/utils/index'
-  import('./src/utils/index')
+  export type { FileWithPath } from './src/utils/file'
+  import('./src/utils/file')
 }
 
 // for vue template auto import
@@ -791,8 +797,12 @@ declare module 'vue' {
     readonly addSeconds: UnwrapRef<typeof import('date-fns')['addSeconds']>
     readonly addWeeks: UnwrapRef<typeof import('date-fns')['addWeeks']>
     readonly addYears: UnwrapRef<typeof import('date-fns')['addYears']>
+    readonly animate: UnwrapRef<typeof import('animejs')['animate']>
+    readonly animeScope: UnwrapRef<typeof import('animejs')['createScope']>
+    readonly animeUtils: UnwrapRef<typeof import('animejs')['utils']>
     readonly areIntervalsOverlapping: UnwrapRef<typeof import('date-fns')['areIntervalsOverlapping']>
     readonly asyncComputed: UnwrapRef<typeof import('@vueuse/core')['asyncComputed']>
+    readonly autoAnimate: UnwrapRef<typeof import('@formkit/auto-animate')['autoAnimate']>
     readonly autoResetRef: UnwrapRef<typeof import('@vueuse/core')['autoResetRef']>
     readonly clamp: UnwrapRef<typeof import('date-fns')['clamp']>
     readonly closestIndexTo: UnwrapRef<typeof import('date-fns')['closestIndexTo']>
@@ -879,7 +889,7 @@ declare module 'vue' {
     readonly formatDistanceToNow: UnwrapRef<typeof import('date-fns')['formatDistanceToNow']>
     readonly formatDistanceToNowStrict: UnwrapRef<typeof import('date-fns')['formatDistanceToNowStrict']>
     readonly formatDuration: UnwrapRef<typeof import('date-fns')['formatDuration']>
-    readonly formatFileSize: UnwrapRef<typeof import('./src/utils/index')['formatFileSize']>
+    readonly formatFileSize: UnwrapRef<typeof import('./src/utils/file')['formatFileSize']>
     readonly formatISO9075: UnwrapRef<typeof import('date-fns')['formatISO9075']>
     readonly formatISO: UnwrapRef<typeof import('date-fns')['formatISO']>
     readonly formatISODuration: UnwrapRef<typeof import('date-fns')['formatISODuration']>
@@ -1055,8 +1065,8 @@ declare module 'vue' {
     readonly reactiveComputed: UnwrapRef<typeof import('@vueuse/core')['reactiveComputed']>
     readonly reactiveOmit: UnwrapRef<typeof import('@vueuse/core')['reactiveOmit']>
     readonly reactivePick: UnwrapRef<typeof import('@vueuse/core')['reactivePick']>
-    readonly readDirectoryEntry: UnwrapRef<typeof import('./src/utils/index')['readDirectoryEntry']>
-    readonly readFileEntry: UnwrapRef<typeof import('./src/utils/index')['readFileEntry']>
+    readonly readDirectoryEntry: UnwrapRef<typeof import('./src/utils/file')['readDirectoryEntry']>
+    readonly readFileEntry: UnwrapRef<typeof import('./src/utils/file')['readFileEntry']>
     readonly readonly: UnwrapRef<typeof import('vue')['readonly']>
     readonly ref: UnwrapRef<typeof import('vue')['ref']>
     readonly refAutoReset: UnwrapRef<typeof import('@vueuse/core')['refAutoReset']>
@@ -1325,6 +1335,7 @@ declare module 'vue' {
     readonly useWindowFocus: UnwrapRef<typeof import('@vueuse/core')['useWindowFocus']>
     readonly useWindowScroll: UnwrapRef<typeof import('@vueuse/core')['useWindowScroll']>
     readonly useWindowSize: UnwrapRef<typeof import('@vueuse/core')['useWindowSize']>
+    readonly waapi: UnwrapRef<typeof import('animejs')['waapi']>
     readonly watch: UnwrapRef<typeof import('vue')['watch']>
     readonly watchArray: UnwrapRef<typeof import('@vueuse/core')['watchArray']>
     readonly watchAtMost: UnwrapRef<typeof import('@vueuse/core')['watchAtMost']>

@@ -15,6 +15,7 @@ import Inspect from "vite-plugin-inspect";
 import { analyzer } from "vite-bundle-analyzer";
 import * as radash from "radash";
 import { resolve } from "path";
+// import {} from 'animejs'
 
 // Radash 自动导入函数添加前缀避免冲突
 const radashFuncsWithPrefix = Object.keys(radash)
@@ -88,6 +89,17 @@ export default defineConfig({
         },
         {
           radash: radashFuncsWithPrefix as [string, string][],
+        },
+        {
+          "@formkit/auto-animate": ["autoAnimate"],
+        },
+        {
+          animejs: [
+            "animate",
+            "waapi",
+            ["utils", "animeUtils"],
+            ["createScope", "animeScope"],
+          ],
         },
       ],
       resolvers: [],

@@ -1,0 +1,16 @@
+- first:[&>div>div]:bg-blue 
+  - first 要在前才生效, >div 只适用第一层.
+- *:divide-y *:divide-gray-200 
+  - *: 是 unocss 的 universal selector variant，官方内置
+- *:(divide-y divide-gray-200)
+  - 不生效, variantGroupTransform 插件能把 hover:(a b) 这种 variant group 正常展开。
+  - 但是这里的 *: 不是单纯的 variant，而是一个 特殊 selector variant，unocss 的 transform 插件没实现对 *: + group 的展开。
+- *:divide-(y gray-200)
+  - 不生效, divide- 系列规则本身是 方向 + 颜色 两部分，但 unocss 没有提供像 font-(light mono) 那样的 多个值组合展开 机制。
+- grid-cols-[auto_1fr]
+- grid-cols-1 md:grid-cols-[auto_minmax(45%,55%)]
+  - 取代不了 flex 的作用.
+- @container
+- 关于元素宽度变化的过渡动画.
+  - Animating to or from width: auto is generally not directly supported by CSS transitions, as auto is a computed value, not a fixed length. For such cases, consider using JavaScript to calculate the target width or using alternative animation techniques like CSS transforms (e.g., transform: scaleX()).
+  - 因此请考虑 js 实现: vueuse + anime.js

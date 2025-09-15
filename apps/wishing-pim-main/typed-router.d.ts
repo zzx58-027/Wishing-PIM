@@ -19,6 +19,8 @@ declare module 'vue-router/auto-routes' {
    */
   export interface RouteNamedMap {
     '/': RouteRecordInfo<'/', '/', Record<never, never>, Record<never, never>>,
+    '/test/drag-drop-debug': RouteRecordInfo<'/test/drag-drop-debug', '/test/drag-drop-debug', Record<never, never>, Record<never, never>>,
+    '/test/loadingbar': RouteRecordInfo<'/test/loadingbar', '/test/loadingbar', Record<never, never>, Record<never, never>>,
     '/test/my-upload': RouteRecordInfo<'/test/my-upload', '/test/my-upload', Record<never, never>, Record<never, never>>,
     '/test/test': RouteRecordInfo<'/test/test', '/test/test', Record<never, never>, Record<never, never>>,
     '/test/test1': RouteRecordInfo<'/test/test1', '/test/test1', Record<never, never>, Record<never, never>>,
@@ -37,6 +39,14 @@ declare module 'vue-router/auto-routes' {
   export interface _RouteFileInfoMap {
     'src/pages/index.md': {
       routes: '/'
+      views: never
+    }
+    'src/pages/test/drag-drop-debug.vue': {
+      routes: '/test/drag-drop-debug'
+      views: never
+    }
+    'src/pages/test/loadingbar.md': {
+      routes: '/test/loadingbar'
       views: never
     }
     'src/pages/test/my-upload.vue': {

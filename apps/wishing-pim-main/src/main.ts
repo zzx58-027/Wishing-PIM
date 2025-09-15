@@ -3,6 +3,7 @@ import { createHead } from "@unhead/vue/client";
 import { PiniaColada } from "@pinia/colada";
 import { createRouter, createWebHistory } from "vue-router";
 import { routes } from "vue-router/auto-routes";
+import { autoAnimatePlugin } from '@formkit/auto-animate/vue'
 
 import pinia from "./store/pinia";
 import App from "./App.vue";
@@ -27,5 +28,6 @@ app.use(PiniaColada, {
     gcTime: 300_000,
   },
 });
+app.use(autoAnimatePlugin)
 
 app.mount("#app");

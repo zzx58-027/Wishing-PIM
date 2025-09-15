@@ -8,7 +8,14 @@ export {}
 /* prettier-ignore */
 declare module 'vue' {
   export interface GlobalComponents {
+    CloudflareR2Upload: typeof import('./src/components/CloudflareR2Upload.vue')['default']
     HelloWorld: typeof import('./src/components/HelloWorld.vue')['default']
+    NButton: typeof import('naive-ui')['NButton']
+    NCollapseItem: typeof import('naive-ui')['NCollapseItem']
+    NEllipsis: typeof import('naive-ui')['NEllipsis']
+    NLoadingBarProvide: typeof import('naive-ui')['NLoadingBarProvide']
+    NLoadingBarProvider: typeof import('naive-ui')['NLoadingBarProvider']
+    NLog: typeof import('naive-ui')['NLog']
     NUpload: typeof import('naive-ui')['NUpload']
     NUploadDragger: typeof import('naive-ui')['NUploadDragger']
     RouterLink: typeof import('vue-router')['RouterLink']
