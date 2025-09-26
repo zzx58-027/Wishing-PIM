@@ -1,0 +1,4 @@
+- 自动广播 (broadcast)
+  - Danfo.js 非常智能，如果你提供一个只包含一个值的数组或 Series，它会自动广播 (broadcast) 这个值，使其长度与 DataFrame 的行数一致。
+- inplace: true
+  - 决定是副本还是原 df 上操作.

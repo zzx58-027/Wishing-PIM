@@ -1,0 +1,6 @@
+- 利用构造函数参数类型推断: `ConstructorParameters<typeof Inngest>["0"]["schemas"]`
+- 使用 Parameters + 工具类型: 如果 Inngest 不是 class，而是一个工厂函数（某些版本是）, 则可以: `type target = Parameters<typeof Inngest>[0]["schemas"];`
+- 类型交叉（Intersection Types）
+  - 如果两个类型都包含同名的键，TypeScript 会以一种特殊的方式处理这个冲突。
+  - 如果一个类型的属性是另一个类型的子类型，TypeScript 会采用更具体的那个子类型。
+  - 如果两个类型中同名属性的类型没有子类型关系，那么 TypeScript 会将它们合并为一个 never 类型。never 类型表示一个永远不会发生的类型，这意味着你无法给这个属性赋任何值。

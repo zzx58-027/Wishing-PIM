@@ -1,0 +1,7 @@
+- import.meta.glob
+  - 在 TypeScript 中解决 Vite 的 import.meta.glob 提示 glob 不存在问题.
+    - 解决方法: tsconfig.json 的 `compilerOptions.types` Add `"vite/client"`
+  - eager: true
+    - 该参数确保了你能够立即获取并导出所有 cf-do.ts 文件中的类，这对于 Cloudflare Workers 中注册 Durable Object 类是必要的。
+    - 如果不使用 eager: true ，你会得到一个包含异步加载函数的对象，而不是实际的模块内容
+    - 设置 eager: true 时，模块会被 立即同步导入 ，相当于使用普通的 import 语句
