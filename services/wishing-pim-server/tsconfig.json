@@ -24,7 +24,8 @@
     "types": [
       "./worker-configuration.d.ts",
       "@types/node",
-      "@types/service-worker-mock"
+      "@types/service-worker-mock",
+      "vite/client"
     ],
     "baseUrl": ".",
     "paths": {

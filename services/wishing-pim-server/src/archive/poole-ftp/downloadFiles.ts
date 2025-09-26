@@ -3,7 +3,7 @@ import { z } from "zod";
 import { Context } from "hono";
 import { stream } from "hono/streaming";
 
-import { downloadFiles, getFilesDownloadUrl } from "@/api/methods/poole-ftp";
+import { downloadFiles, getFilesDownloadUrl } from "@/archive/poole-ftp";
 
 type AppContext = Context<{ Bindings: Env }>;
 

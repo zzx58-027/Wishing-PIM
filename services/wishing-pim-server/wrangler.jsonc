@@ -16,10 +16,16 @@
       {
         "name": "COUNTER",
         "class_name": "Counter"
+      },
+      {
+        "name": "POOLE_FTP_DO_CLIENT",
+        "class_name": "PooleFTP_DO_Client"
       }
     ]
   },
-  "migrations": [{ "tag": "v1", "new_sqlite_classes": ["Counter"] }],
+  "migrations": [
+    { "tag": "v1", "new_sqlite_classes": ["Counter", "PooleFTP_DO_Client"] },
+  ],
   "kv_namespaces": [
     {
       "binding": "KV",
@@ -40,9 +46,7 @@
       "bucket_name": "label-studio"
     }
   ],
-  "vars": {
-    "INNGEST_DEV": "0"
-  }
+  "vars": {}
   /**
    * Smart Placement
    * Docs: https://developers.cloudflare.com/workers/configuration/smart-placement/#smart-placement

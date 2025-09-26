@@ -2,7 +2,7 @@ import { contentJson, OpenAPIRoute } from "chanfana";
 import { z } from "zod";
 import { Context } from "hono";
 
-import { getFilesList, PooleFTPFileSchema } from "@/api/methods/poole-ftp";
+import { getFilesList, PooleFTPFileSchema } from "@/archive/poole-ftp";
 
 type AppContext = Context<{ Bindings: Env }>;
 

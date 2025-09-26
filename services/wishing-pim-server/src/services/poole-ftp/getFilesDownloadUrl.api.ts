@@ -1,10 +1,6 @@
-import { contentJson, OpenAPIRoute } from "chanfana";
-import { z } from "zod";
-import { Context } from "hono";
+import { PooleFTP_Client } from "./logic";
 
-import { getFilesDownloadUrl, downloadFiles } from "@/api/methods/index";
-
-type AppContext = Context<{ Bindings: Env }>;
+type AppContext = HonoContext<{ Bindings: Env }>;
 
 // 大于 3MB 左右, Insomnia PDF 会无法打开, 浏览器应该可以, 但是 worker 时间可能需要注意.
 // 本端口用于支持前端下载的逻辑. 但不太实用, 目标远程服务没有配套错误检测, 文件不存在仍然返回合法 url, 考虑集成至 downloadFiles 接口中. []
@@ -43,26 +39,23 @@ export class GetFilesDownloadUrl extends OpenAPIRoute {
   };
 
   async handle(c: AppContext) {
+    const pooleFTP_Client = new PooleFTP_Client(c.env);
+
     const userInput = await this.getValidatedData<typeof this.schema>();
     const { files } = userInput.body;
 
     // 此处无法验错, 目标远程服务没有配套错误检测, 文件不存在仍然返回合法 url.
-    const { download_url } = await getFilesDownloadUrl(userInput.body.files);
-    const response = await downloadFiles(download_url);
-    if (!response.ok) {
-      throw new NotFoundException(
-        `File not found. Please validate input parameters and URL resource existence.`
-      );
-    }
+    const download_url = await pooleFTP_Client.getFilesDownloadUrl(files);
+    // 利用 downloadFiles 接口, 验证文件是否存在, 获取文件信息.
+    // const response = await pooleFTP_Client.downloadFiles(download_url);
 
     c.status(200);
-    c.header("Content-Type", response.headers.get("Content-Type"));
-    c.header("Content-Length", response.headers.get("Content-Length"));
-    c.header(
-      "Content-Disposition",
-      response.headers.get("Content-Disposition")
-    );
-
+    // c.header("Content-Type", String(response.headers["Content-Type"]));
+    // c.header("Content-Length", String(response.headers["Content-Length"]));
+    // c.header(
+    //   "Content-Disposition",
+    //   String(response.headers["Content-Disposition"])
+    // );
     return {
       download_url,
     };
